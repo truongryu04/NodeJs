@@ -1,3 +1,4 @@
+// [GET] /product
 const Product = require("../../models/productModel")
 module.exports.index = async (req, res) => {
     const products = await Product.find({ status: "active", deleted: false })
