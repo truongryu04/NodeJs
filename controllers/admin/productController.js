@@ -28,16 +28,24 @@ module.exports.index = async (req, res) => {
         fillterStatus[index].class = "active"
     }
     let find = {
-        deleted: false
+        deleted: false,
     }
+
     if (req.query.status) {
         find.status = req.query.status
+    }
+    let keyword = ""
+    if (req.query.keyword) {
+        keyword = req.query.keyword
+        const reg = new RegExp(keyword, "i")
+        find.title = reg
     }
     const products = await Product.find(find)
     console.log(products)
     res.render("admin/pages/product/index", {
         titlePage: "Trang quản lý sản phẩm",
         products: products,
-        fillterStatus: fillterStatus
+        fillterStatus: fillterStatus,
+        keyword: keyword
     })
 }
