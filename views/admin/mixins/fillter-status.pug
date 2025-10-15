@@ -1,0 +1,6 @@
+mixin fillter-status                  
+    each fillter in fillterStatus 
+        button(
+            class = `btn btn-sm ml-2 btn-outline-success ${fillter.class}` 
+            button-status=fillter.status
+        ) #{fillter.name}
