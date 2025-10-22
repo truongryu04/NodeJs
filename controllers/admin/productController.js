@@ -2,6 +2,7 @@
 const Product = require("../../models/productModel")
 const fillterStatusHelper = require("../../helpers/fillterStatus")
 const searchHelper = require("../../helpers/search")
+const paginationHelper = require("../../helpers/pagination")
 module.exports.index = async (req, res) => {
     const fillterStatus = fillterStatusHelper(req.query)
     let find = {
@@ -16,12 +17,26 @@ module.exports.index = async (req, res) => {
     if (objectSearch.keyword) {
         find.title = objectSearch.regex
     }
-    const products = await Product.find(find)
+
+    const countProduct = await Product.countDocuments(find)
+    const objectPagination = paginationHelper(
+        {
+            currentPage: 1,
+            limitItem: 4,
+        },
+        req.query,
+        countProduct
+
+    )
+
+
+    const products = await Product.find(find).limit(objectPagination.limitItem).skip(objectPagination.skip)
     console.log(products)
     res.render("admin/pages/product/index", {
         titlePage: "Trang quản lý sản phẩm",
         products: products,
         fillterStatus: fillterStatus,
-        keyword: objectSearch.keyword
+        keyword: objectSearch.keyword,
+        pagination: objectPagination
     })
 }
