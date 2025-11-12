@@ -107,11 +107,17 @@ if (formChangeMulti) {
         if (inputChecked.length > 0) {
             let Ids = []
             inputChecked.forEach(input => {
-                Ids.push(input.value)
+                const id = input.value
+                if (typeChange == "change-position") {
+                    const position = input.closest("tr").querySelector("input[name='position']").value
+                    Ids.push(`${id}-${position}`)
+                }
+                else {
+                    Ids.push(input.value)
+                }
             })
             const inputSubmit = formChangeMulti.querySelector("input[name='ids']")
             inputSubmit.value = Ids.join(", ")
-            console.log(Ids.join(", "))
             formChangeMulti.submit()
         } else {
             alert("Vui lòng chọn ít nhất 1 sản phẩm")
