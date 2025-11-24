@@ -3,6 +3,7 @@ const Product = require("../../models/productModel")
 const fillterStatusHelper = require("../../helpers/fillterStatus")
 const searchHelper = require("../../helpers/search")
 const paginationHelper = require("../../helpers/pagination")
+const sysConfig = require("../../config/system")
 module.exports.index = async (req, res) => {
     const fillterStatus = fillterStatusHelper(req.query)
     let find = {
@@ -68,12 +69,14 @@ module.exports.changeMulti = async (req, res) => {
             break;
         case "delete-all":
             await Product.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date() })
+            req.flash("success", `Đã xoá thành công ${ids.length} sản phẩm !`)
             break;
         case "change-position":
             for (const item of ids) {
                 let [id, position] = item.split("-")
                 position = parseInt(position)
                 await Product.updateOne({ _id: id }, { position: position })
+                req.flash("success", `Thay đổi vị trí thành công`)
             }
             break;
         default:
@@ -90,7 +93,30 @@ module.exports.deleteItem = async (req, res) => {
 
     // await Product.deleteOne({ _id: id })
     await Product.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() })
+    req.flash("success", `Xoá thành công sản phẩm !`)
     const backURL = req.header('Referer')
     // res.redirect('../..');
     res.redirect(backURL)
+}
+// [GET] /admin/product/create
+module.exports.create = async (req, res) => {
+    res.render("admin/pages/product/create", {
+        titlePage: "Trang thêm sản phẩm",
+    })
+}
+// [POST] /admin/product/create
+module.exports.createPost = async (req, res) => {
+    req.body.price = parseInt(req.body.price)
+    req.body.discountPercentage = parseInt(req.body.discountPercentage)
+    req.body.stock = parseInt(req.body.stock)
+    if (req.body.position == "") {
+        const countProduct = await Product.countDocuments();
+        req.body.position = countProduct + 1
+    }
+    else {
+        req.body.position = parseInt(req.body.position)
+    }
+    const product = new Product(req.body)
+    await product.save()
+    res.redirect(`${sysConfig.prefixAdmin}/product`)
 }
