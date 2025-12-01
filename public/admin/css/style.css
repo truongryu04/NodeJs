@@ -87,3 +87,42 @@
 
 
 /*End Show alert */
+
+/* Image Preview */
+.upload-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview {
+    width: 150px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.image-preview[src=""] {
+    display: none;
+}
+
+.remove-image {
+    position: absolute;
+    top: -10px;
+    /* đưa lên sát ảnh */
+    right: -10px;
+    /* đưa sát bên phải ảnh */
+    background: #ff4d4d;
+    color: white;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    z-index: 10;
+}
+
+/* End Image Preview */

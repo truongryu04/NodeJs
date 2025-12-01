@@ -7,7 +7,6 @@ const session = require('express-session')
 const flash = require('express-flash')
 const app = express();
 
-
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
