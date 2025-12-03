@@ -17,9 +17,11 @@ const routeAdmin = require("./routes/admin/index")
 const database = require("./config/database")
 const port = process.env.PORT || 3000
 const systemConfig = require("./config/system")
-app.set("views", "./views")
+app.set("views", `${__dirname}/views`)
 app.set('view engine', 'pug')
-app.use(express.static('public'))
+
+
+
 
 // Flash
 
@@ -32,6 +34,8 @@ app.use(flash());
 app.locals.prefixAdmin = systemConfig.prefixAdmin
 
 database.connect()
+
+app.use(express.static(`${__dirname}/public`))
 route(app)
 routeAdmin(app)
 
