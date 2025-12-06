@@ -8,10 +8,10 @@ if (ButtonChangeStatus.length > 0) {
             const statusCurrent = button.getAttribute("data-status")
             const id = button.getAttribute("data-id")
             let statusChange = statusCurrent == "active" ? "inactive" : "active"
+            console.log(statusChange)
             const action = path + `/${statusChange}/${id}?_method=PATCH`
             formChangeStatus.action = action
             formChangeStatus.submit()
-
         })
     })
 }
@@ -28,7 +28,6 @@ if (buttonsDelete.length > 0) {
             if (isConfirm) {
                 const id = button.getAttribute("data-id")
                 const action = path + `/${id}?_method=DELETE`
-                console.log(action)
                 formDelete.action = action
                 formDelete.submit()
             }
@@ -36,6 +35,5 @@ if (buttonsDelete.length > 0) {
     })
 }
 //End Delete product
-
 
 

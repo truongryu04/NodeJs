@@ -23,9 +23,7 @@ const formSearch = document.querySelector("#form-search")
 if (formSearch) {
     let url = new URL(window.location.href)
     formSearch.addEventListener("submit", (e) => {
-
         e.preventDefault()
-        console.log(e)
         const keyword = e.target.elements.keyword.value
         if (keyword) {
             url.searchParams.set("keyword", keyword)
@@ -33,7 +31,6 @@ if (formSearch) {
         else {
             url.searchParams.delete("keyword")
         }
-        console.log(keyword)
         window.location.href = url.href
     })
 }
@@ -147,22 +144,54 @@ if (uploadImage) {
     const uploadImageInput = document.querySelector("[upload-image-input]")
     const uploadImagePreview = document.querySelector("[upload-image-preview]")
     const btnRemoveImage = document.querySelector("[remove-image]")
-    console.log(btnRemoveImage)
-    uploadImageInput.addEventListener("change", (e) => {
-        console.log(e)
-        const file = e.target.files[0]
+    if (uploadImageInput) {
+        uploadImageInput.addEventListener("change", (e) => {
+            const file = e.target.files[0]
+            if (file) {
+                uploadImagePreview.src = URL.createObjectURL(file)
+            }
+            btnRemoveImage.style.display = "flex";
 
-        if (file) {
-            uploadImagePreview.src = URL.createObjectURL(file)
-        }
-        btnRemoveImage.style.display = "flex";
+        })
+        btnRemoveImage.addEventListener("click", (e) => {
+            uploadImageInput.value = ""
+            uploadImagePreview.src = ""
+            btnRemoveImage.style.display = "none";
+        })
+    }
 
-    })
-    btnRemoveImage.addEventListener("click", (e) => {
-        uploadImageInput.value = ""
-        uploadImagePreview.src = ""
-        btnRemoveImage.style.display = "none";
-    })
 
 }
 // End Upload Image
+
+// Sort
+const sort = document.querySelector("[sort]")
+if (sort) {
+    let url = new URL(window.location.href)
+    const sortSelect = sort.querySelector("[sort-select]")
+    const sortClear = document.querySelector("[sort-clear]")
+    sortSelect.addEventListener("change", (e) => {
+        const value = e.target.value
+        const [sortKey, sortValue] = value.split("-")
+
+        url.searchParams.set("sortKey", sortKey)
+        url.searchParams.set("sortValue", sortValue)
+        window.location.href = url.href
+    })
+
+    sortClear.addEventListener("click", (e) => {
+        url.searchParams.delete("sortKey")
+        url.searchParams.delete("sortValue")
+        window.location.href = url.href
+    })
+    const sortKey = url.searchParams.get("sortKey")
+    const sortValue = url.searchParams.get("sortValue")
+    if (sortKey && sortValue) {
+        const stringSort = `${sortKey}-${sortValue}`
+        console.log()
+        const selectOption = sortSelect.querySelector(`option[value='${stringSort}']`)
+        selectOption.selected = true
+    }
+
+}
+// End Sort

@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const flash = require('express-flash')
 const app = express();
-
+const path = require('path');
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
@@ -20,11 +20,11 @@ const systemConfig = require("./config/system")
 app.set("views", `${__dirname}/views`)
 app.set('view engine', 'pug')
 
-
-
+// TiniMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+// TiniMCE
 
 // Flash
-
 app.use(cookieParser('GSFDGSGS'));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
