@@ -3,42 +3,46 @@ const sysConfig = require("../../config/system")
 const fillterStatusHelper = require("../../helpers/fillterStatus")
 const paginationHelper = require("../../helpers/pagination")
 const searchHelper = require("../../helpers/search")
+const createTreeHelper = require("../../helpers/createTree")
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
     const fillterStatus = fillterStatusHelper(req.query)
     let find = {
         deleted: false,
     }
-    if (req.query.status) {
-        find.status = req.query.status
-    }
-    const countCategory = await Category.countDocuments(find)
-    const objectPagination = paginationHelper(
-        {
-            currentPage: 1,
-            limitItem: 4,
-        },
-        req.query,
-        countCategory
-    )
+    // if (req.query.status) {
+    //     find.status = req.query.status
+    // }
+    // const countCategory = await Category.countDocuments(find)
+    // const objectPagination = paginationHelper(
+    //     {
+    //         currentPage: 1,
+    //         limitItem: 4,
+    //     },
+    //     req.query,
+    //     countCategory
+    // )
     const objectSearch = searchHelper(req.query)
     if (objectSearch.keyword) {
         find.title = objectSearch.regex
     }
-    let sort = {}
-    if (req.query.sortKey && req.query.sortValue) {
-        sort[req.query.sortKey] = req.query.sortValue
-    }
-    else {
-        sort.position = "desc"
-    }
-    const categories = await Category.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip)
+    // let sort = {}
+    // if (req.query.sortKey && req.query.sortValue) {
+    //     sort[req.query.sortKey] = req.query.sortValue
+    // }
+    // else {
+    //     sort.position = "asc"
+    // }
+    // const categories = await Category.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip)
+
+    const categories = await Category.find(find)
+    const newCategories = createTreeHelper.createTree(categories)
     res.render("admin/pages/product-category/index", {
         titlePage: "Trang quản lý danh mục sản phẩm",
-        categories: categories,
+        categories: newCategories,
         fillterStatus: fillterStatus,
         keyword: objectSearch.keyword,
-        pagination: objectPagination
+        // pagination: objectPagination
     })
 }
 
@@ -100,8 +104,16 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/product-category/create
 module.exports.create = async (req, res) => {
+    let find = {
+        deleted: false,
+    }
+
+    const categories = await Category.find(find)
+    const newCategories = createTreeHelper.createTree(categories)
+    // console.log(newCategories)
     res.render("admin/pages/product-category/create", {
         titlePage: "Trang thêm danh mục sản phẩm",
+        categories: newCategories,
     })
 }
 

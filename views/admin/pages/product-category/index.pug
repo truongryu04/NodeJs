@@ -4,6 +4,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/alert.pug
 include ../../mixins/search
 include ../../mixins/form-change-multi.pug
+include ../../mixins/table-tree.pug
 block main
     h1(class="mb-4") Danh sách danh mục sản phẩm
     .card.mb-3 
@@ -56,48 +57,8 @@ block main
                         th Trạng thái
                         th Hoạt động
                 tbody
-                    each item,index in categories
-                        tr
-                            td 
-                                input(type ="checkbox" name = "id" value=item.id)
-                            td #{index + 1}
-                            td 
-                                img(src=item.thumbnail, alt=item.title width="100px" height="auto")
-                            td #{item.title}
-                            td
-                                input(
-                                    type = "number"
-                                    name = "position"
-                                    value = item.position
-                                    min = "1"
-                                    style = "width : 60px"
-                                )
-                            td
-                                if(item.status =="active")
-                                    a(
-                                        href="javascript:;" 
-                                        data-status = item.status
-                                        data-id = item.id
-                                        button-change-status
-                                        class="badge bg-success"
-                                    ) Hoạt động
-                                else 
-                                    a(
-                                        href="javascript:;" 
-                                        data-status = item.status
-                                        data-id = item.id
-                                        button-change-status
-                                        class="badge bg-danger"
-                                    ) Dừng hoạt động
-                            td 
-                                a(class="btn btn-warning btn-sm" href = `${prefixAdmin}/product-category/edit/${item.id}`) Sửa
-                                a(class="btn btn-secondary btn-sm" href = `${prefixAdmin}/product-category/detail/${item.id}`) Chi tiết
-                                button(
-                                    class="btn btn-danger btn-sm"
-                                    button-delete
-                                    data-id = item.id
-                                    ) Xoá
-    +pagination(pagination)
+                    +table-tree(categories)
+    //- +pagination(pagination)
     form(
         action="" 
         method="POST"
