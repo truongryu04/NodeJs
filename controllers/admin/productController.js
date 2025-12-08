@@ -4,7 +4,8 @@ const fillterStatusHelper = require("../../helpers/fillterStatus")
 const searchHelper = require("../../helpers/search")
 const paginationHelper = require("../../helpers/pagination")
 const sysConfig = require("../../config/system")
-
+const Category = require("../../models/categoryModel")
+const createTreeHelper = require("../../helpers/createTree")
 module.exports.index = async (req, res) => {
     const fillterStatus = fillterStatusHelper(req.query)
     let find = {
@@ -37,14 +38,14 @@ module.exports.index = async (req, res) => {
     else {
         sort.position = "desc"
     }
-
     const products = await Product.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip)
     res.render("admin/pages/product/index", {
         titlePage: "Trang quản lý sản phẩm",
         products: products,
         fillterStatus: fillterStatus,
         keyword: objectSearch.keyword,
-        pagination: objectPagination
+        pagination: objectPagination,
+
     })
 }
 
@@ -106,8 +107,11 @@ module.exports.deleteItem = async (req, res) => {
 }
 // [GET] /admin/product/create
 module.exports.create = async (req, res) => {
+    const categories = await Category.find({ deleted: false })
+    const newCategories = createTreeHelper.createTree(categories)
     res.render("admin/pages/product/create", {
         titlePage: "Trang thêm sản phẩm",
+        categories: newCategories
     })
 }
 // [POST] /admin/product/create
@@ -137,11 +141,14 @@ module.exports.edit = async (req, res) => {
             deleted: false,
             _id: id,
         }
+        const categories = await Category.find({ deleted: false })
+        const newCategories = createTreeHelper.createTree(categories)
         const product = await Product.findOne(find);
         if (product) {
             res.render("admin/pages/product/edit", {
                 titlePage: "Chỉnh sửa sản phẩm",
                 product: product,
+                categories: newCategories
             })
         }
     } catch (error) {
