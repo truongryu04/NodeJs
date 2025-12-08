@@ -141,10 +141,14 @@ module.exports.edit = async (req, res) => {
             _id: id,
         }
         const category = await Category.findOne(find);
+        const categories = await Category.find({ deleted: false })
+        const newCategories = createTreeHelper.createTree(categories)
         if (category) {
             res.render("admin/pages/product-category/edit", {
                 titlePage: "Chỉnh sửa sản phẩm",
                 category: category,
+                categories: newCategories,
+
             })
         }
     } catch (error) {

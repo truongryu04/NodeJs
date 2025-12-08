@@ -13,10 +13,12 @@ const createTree = (arr, parent_id = "") => {
             tree.push(newItem)
         }
     });
+
     return tree
 }
 module.exports.createTree = (arr, parent_id = "") => {
     const tree = createTree(arr, parent_id = "")
+    count = 0
     return tree
 
 }
