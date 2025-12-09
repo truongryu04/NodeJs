@@ -35,9 +35,8 @@ block main
                 class="form-control textarea-mce"
                 id = "desc"
                 name = "description"
-                value = category.description
                 rows="5"
-            )
+            ) #{category.description}
 
         div(class = "form-group" upload-image)
             lable(for="thumbnail") Ảnh
