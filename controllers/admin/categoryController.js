@@ -177,4 +177,24 @@ module.exports.editPatch = async (req, res) => {
 
     res.redirect(`${sysConfig.prefixAdmin}/product-category`)
 }
+// [GET] /admin/product-category/detail/:id
+module.exports.detail = async (req, res) => {
+    try {
+        const id = req.params.id
+        const find = {
+            deleted: false,
+            _id: id,
+        }
+        const category = await Category.findOne(find);
+        if (category) {
+            res.render("admin/pages/product-category/detail", {
+                titlePage: category.title,
+                category: category,
+            })
+        }
+    } catch (error) {
+        req.flash("error", `Không tồn tại danh mục sản phẩm`)
+        res.redirect(`${sysConfig.prefixAdmin}/product-category`)
+    }
+}
 

@@ -60,3 +60,38 @@ module.exports.editPatch = async (req, res) => {
 
     res.redirect(`${sysConfig.prefixAdmin}/role`)
 }
+
+// [GET] /admin/role/permissions
+module.exports.permissions = async (req, res) => {
+    let find = {
+        deleted: false
+    }
+    const roles = await Role.find(find)
+    res.render("admin/pages/role/permissions", {
+        titlePage: "Trang phân quyền",
+        roles: roles
+    })
+}
+// [PATCH] /admin/role/permissions
+module.exports.permissionsPatch = async (req, res) => {
+
+    const permissions = JSON.parse(req.body.permissions)
+    for (const item of permissions) {
+        await Role.updateOne({ _id: item.id }, { permissions: item.permissions })
+    }
+    req.flash("sucess", `Cập nhật thành công`)
+    const backURL = req.header('Referer')
+    res.redirect(backURL)
+}
+
+// [DELETE] /admin/role/delete/:id
+module.exports.deleteRole = async (req, res) => {
+    const id = req.params.id
+
+    // await Product.deleteOne({ _id: id })
+    await Role.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() })
+    req.flash("success", `Xoá nhóm quyền thành công !`)
+    const backURL = req.header('Referer')
+    // res.redirect('../..');
+    res.redirect(backURL)
+}

@@ -33,7 +33,7 @@ block main
                                 td #{item.description}
                                 td 
                                     a(class="btn btn-warning btn-sm" href = `${prefixAdmin}/role/edit/${item.id}`) Sửa
-                                    a(class="btn btn-secondary btn-sm" href = `${prefixAdmin}/role/detail/${item.id}`) Chi tiết
+                                    //- a(class="btn btn-secondary btn-sm" href = `${prefixAdmin}/role/detail/${item.id}`) Chi tiết
                                     button(
                                         class="btn btn-danger btn-sm"
                                         button-delete
@@ -42,6 +42,11 @@ block main
                     else 
                         tr
                             td(colspan="4" class="text-center") Chưa có nhóm quyền nào được tạo
-                         
+    form(
+        action="" 
+        method="POST"
+        id = "form-delete-item"
+        path = `${prefixAdmin}/role/delete`
+    )                   
     <script src="/admin/js/product.js"></script>
       
