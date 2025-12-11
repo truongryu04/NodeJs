@@ -1,4 +1,3 @@
-// [GET] /admin/product
 const Product = require("../../models/productModel")
 const fillterStatusHelper = require("../../helpers/fillterStatus")
 const searchHelper = require("../../helpers/search")
@@ -6,6 +5,8 @@ const paginationHelper = require("../../helpers/pagination")
 const sysConfig = require("../../config/system")
 const Category = require("../../models/categoryModel")
 const createTreeHelper = require("../../helpers/createTree")
+
+// [GET] /admin/product
 module.exports.index = async (req, res) => {
     const fillterStatus = fillterStatusHelper(req.query)
     let find = {

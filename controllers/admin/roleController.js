@@ -21,7 +21,6 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/role/create
 module.exports.createPost = async (req, res) => {
-    console.log(req.body)
     const role = new Role(req.body)
     await role.save()
     res.redirect(`${sysConfig.prefixAdmin}/role`)
@@ -36,7 +35,6 @@ module.exports.edit = async (req, res) => {
             _id: id,
         }
         const role = await Role.findOne(find)
-        console.log(role)
         if (role) {
             res.render("admin/pages/role/edit", {
                 titlePage: "Chỉnh sửa nhóm quyền",
