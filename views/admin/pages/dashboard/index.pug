@@ -1,2 +1,8 @@
 extends ../../layouts/default.pug
-block main 
+include ../../mixins/alert.pug
+
+block main
+    +alert-error(5000)
+    +alert-success(5000)
+    div #{role}
+    div #{user}

@@ -108,7 +108,31 @@ block main
                 td Phân quyền
                 each item,index in roles 
                     td(class="text-center")
-                        input(type="checkbox")                                                                
+                        input(type="checkbox")      
+            //- Tài khoản
+            tr
+                td(colspan="4")
+                    b Tài khoản
+            tr(data-name = "account_view")
+                td Xem
+                each item,index in roles 
+                    td(class="text-center")
+                        input(type="checkbox")
+            tr(data-name = "account_create")
+                td Thêm mới
+                each item,index in roles 
+                    td(class="text-center")
+                        input(type="checkbox")                        
+            tr(data-name = "account_edit")
+                td Chỉnh sửa
+                each item,index in roles 
+                    td(class="text-center")
+                        input(type="checkbox")
+            tr(data-name = "account_delete")
+                td Xoá
+                each item,index in roles 
+                    td(class="text-center")
+                        input(type="checkbox")                                              
     form(
         id = "form-change-permissions"
         method = "POST"

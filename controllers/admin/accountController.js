@@ -89,3 +89,26 @@ module.exports.editPatch = async (req, res) => {
     }
     res.redirect(req.get('Referer'));
 }
+
+// [DELETE] /admin/account/delete/:id
+module.exports.deleteAccount = async (req, res) => {
+    const id = req.params.id
+
+    await Account.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() })
+    req.flash("success", `Xoá tài khoản thành công !`)
+    const backURL = req.header('Referer')
+    // res.redirect('../..');
+    res.redirect(backURL)
+}
+
+// [PATCH] /admin/account/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    const status = req.params.status
+    const id = req.params.id
+
+    await Account.updateOne({ _id: id }, { status: status })
+    req.flash("success", "Cập nhật trạng thái thành công!")
+    const backURL = req.header('Referer')
+    // res.redirect('../..');
+    res.redirect(backURL)
+}

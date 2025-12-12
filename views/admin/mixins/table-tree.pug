@@ -35,13 +35,15 @@ mixin table-tree(items, level=1)
                         class="badge bg-danger"
                     ) Dừng hoạt động
             td 
-                a(class="btn btn-warning btn-sm" href = `${prefixAdmin}/product-category/edit/${item.id}`) Sửa
+                if(role.permissions.includes("product-category_edit"))  
+                    a(class="btn btn-warning btn-sm" href = `${prefixAdmin}/product-category/edit/${item.id}`) Sửa
                 a(class="btn btn-secondary btn-sm" href = `${prefixAdmin}/product-category/detail/${item.id}`) Chi tiết
-                button(
-                    class="btn btn-danger btn-sm"
-                    button-delete
-                    data-id = item.id
-                    ) Xoá
+                if(role.permissions.includes("product-category_delete"))  
+                    button(
+                        class="btn btn-danger btn-sm"
+                        button-delete
+                        data-id = item.id
+                        ) Xoá
         if item.children && item.children.length > 0
             +table-tree(item.children,level+1)
             

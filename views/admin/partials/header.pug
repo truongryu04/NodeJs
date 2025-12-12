@@ -3,6 +3,10 @@
         .row.align-items-center 
             .col-3
                 .inner-logo
-                    a(href=`/${prefixAdmin}/dashboard`) ADMIN
+                    a(href=`${prefixAdmin}/dashboard`) ADMIN
             .col-9 
-            
+                div(class="text-end")
+                    a(
+                        href=`${prefixAdmin}/auth/logout`
+                        class="btn btn-danger btn-sm"
+                    ) Đăng xuất

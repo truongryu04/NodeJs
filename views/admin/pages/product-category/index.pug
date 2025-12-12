@@ -6,69 +6,73 @@ include ../../mixins/search
 include ../../mixins/form-change-multi.pug
 include ../../mixins/table-tree.pug
 block main
-    h1(class="mb-4") Danh sách danh mục sản phẩm
-    .card.mb-3 
-        .card-header Bộ lọc và tìm kiếm 
-        .card-body
-            .row
-                .col-6
-                    +fillter-status(fillterStatus)
-                .col-6
-                    +search(keyword)
-    .card.mb-3 
-        .card-header Sắp xếp
-        .card-body
-            .row 
-                .col-4
-                    div(sort)
-                        select(
-                            class = "form-controller"
-                            name = "sort"
-                            sort-select
-                        )
-                            option(value="position-desc") Vị trí giảm dần
-                            option(value="position-asc") Vị trí Tăng dần
-                            option(value="title-asc") Tiêu đề A-Z   
-                            option(value="title-desc") Tiêu đề Z-A
-                    button(
-                        class="btn btn-danger mt-2"
-                        sort-clear
-                    ) Clear
-    .card.mb-3 
-        .card-header Danh sách 
-        .card-body
-            .row 
-                .col-8
-                    +form-change-multi(`${prefixAdmin}/product-category/change-multi?_method=PATCH`)
-                .col-4
-                    a(
-                        href = `${prefixAdmin}/product-category/create`
-                        class = "btn btn-outline-success"
-                    ) +Thêm mới
-            table(class="table table-hover table-sm" checkbox-multi)
-                thead
-                    tr 
-                        th
-                            input(type = "checkbox" name = "checkall")
-                        th STT
-                        th Hình ảnh 
-                        th Tiêu đề
-                        th Vị trí
-                        th Trạng thái
-                        th Hoạt động
-                tbody
-                    +table-tree(categories)
-    //- +pagination(pagination)
-    form(
-        action="" 
-        method="POST"
-        id = "form-change-status"
-        path = `${prefixAdmin}/product-category/change-status`
-    ) 
-    form(
-        action="" 
-        method="POST"
-        id = "form-delete-item"
-        path = `${prefixAdmin}/product-category/delete`
-    )
-    <script src="/admin/js/product.js"></script>
+    if(role.permissions.includes("product-category_view"))  
+        h1(class="mb-4") Danh sách danh mục sản phẩm
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm 
+            .card-body
+                .row
+                    .col-6
+                        +fillter-status(fillterStatus)
+                    .col-6
+                        +search(keyword)
+        .card.mb-3 
+            .card-header Sắp xếp
+            .card-body
+                .row 
+                    .col-4
+                        div(sort)
+                            select(
+                                class = "form-controller"
+                                name = "sort"
+                                sort-select
+                            )
+                                option(value="position-desc") Vị trí giảm dần
+                                option(value="position-asc") Vị trí Tăng dần
+                                option(value="title-asc") Tiêu đề A-Z   
+                                option(value="title-desc") Tiêu đề Z-A
+                        button(
+                            class="btn btn-danger mt-2"
+                            sort-clear
+                        ) Clear
+        .card.mb-3 
+            .card-header Danh sách 
+            .card-body
+                .row 
+                    .col-8
+                        +form-change-multi(`${prefixAdmin}/product-category/change-multi?_method=PATCH`)
+                    .col-4
+                        if(role.permissions.includes("product-category_create"))  
+                            a(
+                                href = `${prefixAdmin}/product-category/create`
+                                class = "btn btn-outline-success"
+                            ) +Thêm mới
+                table(class="table table-hover table-sm" checkbox-multi)
+                    thead
+                        tr 
+                            th
+                                input(type = "checkbox" name = "checkall")
+                            th STT
+                            th Hình ảnh 
+                            th Tiêu đề
+                            th Vị trí
+                            th Trạng thái
+                            th Hoạt động
+                    tbody
+                        +table-tree(categories)
+        //- +pagination(pagination)
+        if(role.permissions.includes("product-category_edit"))  
+            form(
+                action="" 
+                method="POST"
+                id = "form-change-status"
+                path = `${prefixAdmin}/product-category/change-status`
+            ) 
+        if(role.permissions.includes("product-category_delete")) 
+            form(
+                action="" 
+                method="POST"
+                id = "form-delete-item"
+                path = `${prefixAdmin}/product-category/delete`
+            )
+        <script src="/admin/js/product.js"></script>

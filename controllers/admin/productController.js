@@ -5,7 +5,7 @@ const paginationHelper = require("../../helpers/pagination")
 const sysConfig = require("../../config/system")
 const Category = require("../../models/categoryModel")
 const createTreeHelper = require("../../helpers/createTree")
-
+const Account = require("../../models/accountModel")
 // [GET] /admin/product
 module.exports.index = async (req, res) => {
     const fillterStatus = fillterStatusHelper(req.query)
@@ -39,7 +39,18 @@ module.exports.index = async (req, res) => {
     else {
         sort.position = "desc"
     }
+
     const products = await Product.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip)
+    for (const product of products) {
+        const user = await Account.findOne({
+            deleted: false,
+            _id: product.createdBy.account_id
+        })
+        if (user) {
+            product.account_fullName = user.fullName
+        }
+    }
+
     res.render("admin/pages/product/index", {
         titlePage: "Trang quản lý sản phẩm",
         products: products,
@@ -121,6 +132,9 @@ module.exports.createPost = async (req, res) => {
     req.body.price = parseInt(req.body.price)
     req.body.discountPercentage = parseInt(req.body.discountPercentage)
     req.body.stock = parseInt(req.body.stock)
+    req.body.createdBy = {
+        account_id: res.locals.user.id
+    }
     if (req.body.position == "") {
         const countProduct = await Product.countDocuments();
         req.body.position = countProduct + 1

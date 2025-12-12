@@ -7,6 +7,7 @@ const session = require('express-session')
 const flash = require('express-flash')
 const app = express();
 const path = require('path');
+const moment = require('moment');
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
@@ -32,7 +33,7 @@ app.use(flash());
 
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin
-
+app.locals.moment = moment
 database.connect()
 
 app.use(express.static(`${__dirname}/public`))
