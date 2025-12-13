@@ -49,6 +49,20 @@ module.exports.index = async (req, res) => {
         if (user) {
             product.account_fullName = user.fullName
         }
+        const lengthUpdatedBy = product.updatedBy.length
+
+        const updateBy = product.updatedBy[lengthUpdatedBy - 1]
+        console.log(updateBy)
+        if (updateBy) {
+            const user2 = await Account.findOne({
+                deleted: false,
+                _id: updateBy.account_id
+            })
+            if (user2) {
+                product.account_updatedBy = user2.fullName
+            }
+        }
+
     }
 
     res.render("admin/pages/product/index", {
@@ -65,8 +79,11 @@ module.exports.index = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
     const status = req.params.status
     const id = req.params.id
-
-    await Product.updateOne({ _id: id }, { status: status })
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date
+    }
+    await Product.updateOne({ _id: id }, { status: status, $push: { updatedBy: updatedBy } })
     req.flash("success", "Cập nhật trạng thái thành công!")
     const backURL = req.header('Referer')
     // res.redirect('../..');
@@ -77,24 +94,34 @@ module.exports.changeStatus = async (req, res) => {
 module.exports.changeMulti = async (req, res) => {
     const type = req.body.type
     const ids = req.body.ids.split(", ")
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date
+    }
     switch (type) {
         case "active":
-            await Product.updateMany({ _id: { $in: ids } }, { status: "active" })
+            await Product.updateMany({ _id: { $in: ids } }, { status: "active", })
             req.flash("success", `Cập nhật trạng thái thành công ${ids.length} sản phẩm !`)
             break;
         case "inactive":
-            await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" })
+            await Product.updateMany({ _id: { $in: ids } }, { status: "inactive", $push: { updatedBy: updatedBy } })
             req.flash("success", `Cập nhật trạng thái thành công ${ids.length} sản phẩm !`)
             break;
         case "delete-all":
-            await Product.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date() })
+            await Product.updateMany({ _id: { $in: ids } }, {
+                deleted: true,
+                deletedBy: {
+                    account_id: res.locals.user.id,
+                    deletedAt: new Date()
+                }
+            })
             req.flash("success", `Đã xoá thành công ${ids.length} sản phẩm !`)
             break;
         case "change-position":
             for (const item of ids) {
                 let [id, position] = item.split("-")
                 position = parseInt(position)
-                await Product.updateOne({ _id: id }, { position: position })
+                await Product.updateOne({ _id: id }, { position: position, $push: { updatedBy: updatedBy } })
                 req.flash("success", `Thay đổi vị trí thành công`)
             }
             break;
@@ -111,7 +138,15 @@ module.exports.deleteItem = async (req, res) => {
     const id = req.params.id
 
     // await Product.deleteOne({ _id: id })
-    await Product.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() })
+    await Product.updateOne(
+        { _id: id },
+        {
+            deleted: true,
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
+        })
     req.flash("success", `Xoá thành công sản phẩm !`)
     const backURL = req.header('Referer')
     // res.redirect('../..');
@@ -184,7 +219,16 @@ module.exports.editPatch = async (req, res) => {
     }
 
     try {
-        await Product.updateOne({ _id: req.params.id }, req.body)
+        const updatedBy = {
+            account_id: res.locals.user.id,
+            updatedAt: new Date
+        }
+
+        await Product.updateOne({ _id: req.params.id }, {
+            ...req.body,
+            $push: { updatedBy: updatedBy }
+        }
+        )
         req.flash("success", `Cập nhật sản phẩm thành công`)
     } catch (error) {
         req.flash("error", `Cập nhật sản phẩm thất bại`)

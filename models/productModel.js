@@ -38,6 +38,12 @@ const ProductSchema = new mongoose.Schema({
             default: Date
         }
     },
+    updatedBy: [
+        {
+            account_id: String,
+            updatedAt: Date
+        }
+    ],
 }, {
     timestamps: {
         createdAt: 'createdAt',
