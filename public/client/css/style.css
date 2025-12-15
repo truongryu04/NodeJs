@@ -145,3 +145,45 @@ footer {
 .sub-menu ul li:hover>ul {
     display: block;
 }
+
+/*End sub-menu */
+/*product detail */
+
+.product-detail .inner-thumb img {
+    width: 100%;
+    height: auto;
+}
+
+.product-detail .inner-title {
+    font-size: 32px;
+    margin-bottom: 10px
+}
+
+.product-detail .inner-category {
+    margin-bottom: 10px
+}
+
+.product-detail .inner-price-new {
+    color: green;
+    font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 10px
+}
+
+.product-detail .inner-price-old {
+    font-size: 22px;
+    font-weight: 600;
+    color: red;
+    text-decoration: line-through;
+}
+
+
+.product-detail .inner-percent {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    background: red;
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 8px;
+}
