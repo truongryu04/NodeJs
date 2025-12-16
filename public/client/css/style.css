@@ -1,4 +1,8 @@
 /* Header */
+a {
+    text-decoration: none;
+}
+
 .header {
     border-bottom: 1px solid #ddd;
     padding: 10px 0;
@@ -178,15 +182,35 @@ footer {
 }
 
 
-.product-detail .inner-percent {
+.product-detail .inner-percent span {
     font-size: 14px;
     font-weight: 600;
     color: white;
     background: red;
     display: inline-block;
-    padding: 3px 10px;
+    padding: 2px 8px;
     border-radius: 8px;
 }
+
+.inner-stock {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.inner-stock span {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 0 4px;
+    background-color: green;
+    /* xanh lá */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
 
 /* Show alert */
 [show-alert] {
