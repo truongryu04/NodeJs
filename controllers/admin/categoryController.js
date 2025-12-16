@@ -118,17 +118,24 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/product-category/create
 module.exports.createPost = async (req, res) => {
-    if (req.body.position == "") {
-        const countProduct = await Category.countDocuments();
-        req.body.position = countProduct + 1
+    const permission = res.locals.role.permission
+    if (permission.includes("product-category_create")) {
+        if (req.body.position == "") {
+            const countProduct = await Category.countDocuments();
+            req.body.position = countProduct + 1
+        }
+        else {
+            req.body.position = parseInt(req.body.position)
+        }
+
+        const category = new Category(req.body)
+        await category.save()
+        res.redirect(`${sysConfig.prefixAdmin}/product-category`)
     }
     else {
-        req.body.position = parseInt(req.body.position)
+        res.send("403")
     }
 
-    const category = new Category(req.body)
-    await category.save()
-    res.redirect(`${sysConfig.prefixAdmin}/product-category`)
 }
 
 // [GET] /admin/product-category/edit/:id
