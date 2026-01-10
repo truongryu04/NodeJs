@@ -1,0 +1,20 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+block main
+    +alert-success(2000)
+    +alert-error(5000)
+    .container.my-5  
+        .row.justify-content-center
+            .col-8
+                h1.text-center.mb-4 Đăng ký tài khoản
+                form(action="/user/register" method="POST")
+                    div(class = "form-group mb-3")
+                        label(for="fullName") Họ và tên
+                        input.form-control(type="text" id="fullName" name="fullName" required)
+                    div(class = "form-group mb-3")
+                        label.form-label(for="email") Email
+                        input.form-control(type="email" id="email" name="email" required)
+                    div(class = "form-group mb-3")
+                        label.form-label(for="password") Mật khẩu
+                        input.form-control(type="password" id="password" name="password" required)
+                    button.btn.btn-primary(type="submit" class="w-100") Đăng ký
