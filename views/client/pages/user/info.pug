@@ -1,0 +1,24 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/product-item.pug
+block main
+    .container.my-3 
+        .row 
+            .col-12 
+                +box-head(titlePage)
+        .row 
+            .col-12
+                div() 
+                    .user-info
+                        .avatar.mb-3
+                            img(src=user.avatar alt="Avatar" width="100" height="100" class="rounded-circle")
+                        p
+                            strong Họ và tên: 
+                            | #{user.fullName}
+                        p
+                            strong Email: 
+                            | #{user.email}
+                        p
+                            strong Số điện thoại: 
+                            | #{user.phone}
+

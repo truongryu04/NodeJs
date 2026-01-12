@@ -1,4 +1,5 @@
 const User = require("../../models/userModel")
+const Cart = require("../../models/cartModel")
 const ForgotPassword = require("../../models/forgot-passwordModel")
 const md5 = require("md5")
 const generateHelper = require("../../helpers/generate")
@@ -37,7 +38,6 @@ module.exports.login = async (req, res) => {
 // [POST] user/login
 module.exports.loginPost = async (req, res) => {
     req.body.password = md5(req.body.password)
-
     const user = await User.findOne({
         email: req.body.email,
         deleted: false,
@@ -58,18 +58,27 @@ module.exports.loginPost = async (req, res) => {
         return
     }
     res.cookie("tokenUser", user.tokenUser)
+    const cartId = req.cookies.cartId
+    const cart = await Cart.findOne({
+        user_id: user.id
+    })
+    if (cart) {
+        res.cookie("cartId", cart.id)
+    } else if (cartId) {
+        await Cart.updateOne({ _id: cartId }, { user_id: user.id })
+        res.cookie("cartId", cartId)
+    } else {
+        const newCart = new Cart({ user_id: user.id })
+        await newCart.save()
+        res.cookie("cartId", newCart.id)
+    }
     res.redirect("/")
-
-
-
-
-
-
 }
 
 // [GET] user/logout
 module.exports.logout = async (req, res) => {
     res.clearCookie("tokenUser")
+    res.clearCookie("cartId")
     res.redirect("/")
 }
 
@@ -156,4 +165,12 @@ module.exports.resetPasswordPost = async (req, res) => {
     })
     req.flash("success", "Đổi mật khẩu thành công")
     res.redirect("/")
+}
+
+// [GET] user/info
+module.exports.info = async (req, res) => {
+    res.render("client/pages/user/info", {
+        titlePage: "Thông tin tài khoản",
+    })
+
 }
