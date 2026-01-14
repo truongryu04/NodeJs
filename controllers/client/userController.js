@@ -167,10 +167,27 @@ module.exports.resetPasswordPost = async (req, res) => {
     res.redirect("/")
 }
 
-// [GET] user/info
-module.exports.info = async (req, res) => {
-    res.render("client/pages/user/info", {
+// [GET] user/infor
+module.exports.infor = async (req, res) => {
+    res.render("client/pages/user/infor", {
         titlePage: "Thông tin tài khoản",
     })
+
+}
+// [GET] user/edit
+module.exports.edit = async (req, res) => {
+    res.render("client/pages/user/edit", {
+        titlePage: "Trang chỉnh sửa thông tin tài khoản",
+    })
+
+}
+// [Post] user/edit
+module.exports.editPost = async (req, res) => {
+    const user = res.locals.user
+    console.log(user)
+    await User.updateOne({
+        _id: user.id
+    }, req.body)
+    res.redirect("/user/infor")
 
 }
