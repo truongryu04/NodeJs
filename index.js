@@ -37,9 +37,14 @@ app.locals.moment = moment
 database.connect()
 
 app.use(express.static(`${__dirname}/public`))
+// Routes
 route(app)
 routeAdmin(app)
-
+app.use((req, res) => {
+    res.status(404).render("client/pages/errors/404", {
+        titlePage: "404 not found",
+    })
+})
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 }); 
