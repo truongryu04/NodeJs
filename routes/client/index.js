@@ -8,10 +8,12 @@ const userRouter = require("./user")
 const categoryMiddleware = require("../../middlewares/client/categoryMiddleware")
 const carMiddleware = require("../../middlewares/client/cartMiddleware")
 const userMiddleware = require("../../middlewares/client/userMiddleware")
+const settingMiddleware = require("../../middlewares/client/settingMiddleware")
 module.exports = (app) => {
     app.use(userMiddleware.infoUser)
     app.use(categoryMiddleware.category)
     app.use(carMiddleware.cartId)
+    app.use(settingMiddleware.settingGeneral)
     app.use('/', homeRouter)
 
     app.use('/product', productRouter)
