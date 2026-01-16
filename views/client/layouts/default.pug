@@ -18,11 +18,13 @@ html
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" ></script>
+        
         //- SocketIO
         script(src="/socket.io/socket.io.js")
         script(src="/client/js/socket.js")
-        script(src="/client/js/chat.js") 
-
+        script(type="module" src="/client/js/chat.js") 
+        //- emoji-picker-element
+        <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 
 
         <script src="/client/js/script.js"></script>
