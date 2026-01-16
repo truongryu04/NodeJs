@@ -11,11 +11,7 @@ const moment = require('moment');
 // Khai báo socket.io
 const { createServer } = require('node:http');
 const { Server } = require("socket.io")
-const server = createServer(app);
-const io = new Server(server)
-io.on('connection', (socket) => {
-    console.log("a user connected", socket.id)
-})
+
 
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded())
@@ -41,7 +37,9 @@ app.use(flash());
 // End Flash
 
 // SocketIO
-
+const server = createServer(app);
+const io = new Server(server)
+global._io = io
 
 // End Socket
 

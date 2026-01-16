@@ -11,21 +11,13 @@ block main
         .row 
             .col-12 
                 .chat 
-                    .inner-body 
-                        .inner-incoming 
-                            .inner-name Dung
-                            .inner-content 
-                                | Chào 
-                        .inner-outgoing 
-                            .inner-content
-                                | Alo 
-                        .inner-incoming 
-                            .inner-name Dung
-                            .inner-content 
-                                | Chào bạn
-                        .inner-outgoing 
-                            .inner-content
-                                | Alo 
+                    .inner-body
+                        each chat in chats
+                            div(class=(chat.user_id==user.id ? "inner-outgoing" :"inner-incoming" ))
+                                if(chat.user_id!=user.id)
+                                    .inner-name #{chat.inforUser.fullName}
+                                .inner-content 
+                                    | #{chat.content}
                     .inner-foot
                         form(class = "inner-form" action="" method="")
                             input(
