@@ -249,6 +249,108 @@ footer {
     cursor: pointer;
 }
 
-
-
 /*End Show alert */
+
+/* Chat */
+.chat {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* Phần hiển thị nội dung tin nhắn */
+.chat .inner-body {
+    height: 400px;
+    /* Chiều cao cố định */
+    overflow-y: auto;
+    /* Cho phép cuộn */
+    padding: 15px;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Tin nhắn đến (Người khác gửi) --- */
+.chat .inner-incoming {
+    margin-bottom: 10px;
+    align-self: flex-start;
+    max-width: 70%;
+}
+
+.chat .inner-incoming .inner-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+    color: #333;
+}
+
+.chat .inner-incoming .inner-content {
+    background-color: #fff;
+    padding: 8px 12px;
+    border-radius: 15px;
+    border-top-left-radius: 0;
+    /* Tạo góc nhọn bên trái */
+    border: 1px solid #eee;
+    display: inline-block;
+}
+
+/* --- Tin nhắn đi (Mình gửi) --- */
+.chat .inner-outgoing {
+    margin-bottom: 10px;
+    align-self: flex-end;
+    max-width: 70%;
+    text-align: right;
+}
+
+.chat .inner-outgoing .inner-content {
+    background-color: #FE5DA3;
+    /* Màu hồng giống button */
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 15px;
+    border-top-right-radius: 0;
+    /* Tạo góc nhọn bên phải */
+    display: inline-block;
+    text-align: left;
+}
+
+/* --- Phần chân trang (Form nhập liệu) - GIỐNG TRONG ẢNH --- */
+.chat .inner-foot {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.chat .inner-form {
+    display: flex;
+    align-items: center;
+}
+
+.chat .inner-form input {
+    flex: 1;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 0 10px;
+    outline: none;
+}
+
+.chat .inner-form button {
+    border-radius: 15px;
+    border: 1px solid #FE5DA3;
+    background: #FE5DA3;
+    color: #fff;
+    height: 32px;
+    padding: 0 15px;
+    cursor: pointer;
+    margin-left: 10px;
+    /* Thêm khoảng cách giữa input và nút */
+    transition: all 0.3s ease;
+}
+
+.chat .inner-form button:hover {
+    background: #e04d8f;
+    border-color: #e04d8f;
+}
+
+/* End chat */

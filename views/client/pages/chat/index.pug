@@ -1,0 +1,38 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+block main
+    +alert-success(2000)
+
+    .container.my-3
+        .row
+            .col-12 
+                +box-head("Chat")
+        .row 
+            .col-12 
+                .chat 
+                    .inner-body 
+                        .inner-incoming 
+                            .inner-name Dung
+                            .inner-content 
+                                | Chào 
+                        .inner-outgoing 
+                            .inner-content
+                                | Alo 
+                        .inner-incoming 
+                            .inner-name Dung
+                            .inner-content 
+                                | Chào bạn
+                        .inner-outgoing 
+                            .inner-content
+                                | Alo 
+                    .inner-foot
+                        form(class = "inner-form" action="" method="")
+                            input(
+                                type = "text"
+                                placeholder = "Nhập nội dung ..."
+                                name = "content"
+                            )   
+                            button
+                                i.fa-solid.fa-paper-plane
+                    

@@ -8,6 +8,15 @@ const flash = require('express-flash')
 const app = express();
 const path = require('path');
 const moment = require('moment');
+// Khai báo socket.io
+const { createServer } = require('node:http');
+const { Server } = require("socket.io")
+const server = createServer(app);
+const io = new Server(server)
+io.on('connection', (socket) => {
+    console.log("a user connected", socket.id)
+})
+
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
@@ -31,6 +40,13 @@ app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 // End Flash
 
+// SocketIO
+
+
+// End Socket
+
+
+
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin
 app.locals.moment = moment
@@ -45,6 +61,6 @@ app.use((req, res) => {
         titlePage: "404 not found",
     })
 })
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 }); 
