@@ -3,6 +3,7 @@ const User = require('../../models/userModel')
 // [GET] /chat
 module.exports.index = async (req, res) => {
     const userId = res.locals.user.id
+    const fullName = res.locals.user.fullName
     _io.once('connection', (socket) => {
         socket.on("CLIENT_SEND_MESSAGE", async (content) => {
             const chat = new Chat({
@@ -10,6 +11,12 @@ module.exports.index = async (req, res) => {
                 content: content,
             })
             await chat.save()
+            // Trả về cho client
+            _io.emit("SERVER_RETURN_MESSAGE", {
+                fullName: fullName,
+                user_id: userId,
+                content: content
+            })
         })
     })
     //  Lấy data từ db

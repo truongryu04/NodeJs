@@ -343,7 +343,7 @@ footer {
     height: 32px;
     padding: 0 15px;
     cursor: pointer;
-    margin-left: 10px;
+    margin-left: 5px;
     /* Thêm khoảng cách giữa input và nút */
     transition: all 0.3s ease;
 }
