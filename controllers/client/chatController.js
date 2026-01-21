@@ -18,6 +18,16 @@ module.exports.index = async (req, res) => {
                 content: content
             })
         })
+
+        // Typing
+        socket.on("CLIENT_SEND_TYPING", async (type) => {
+            socket.broadcast.emit("SERVER_RETURN_TYPING", {
+                fullName: fullName,
+                user_id: userId,
+                type: type
+            })
+        })
+        // End typing
     })
     //  Lấy data từ db
     const chats = await Chat.find({

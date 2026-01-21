@@ -366,3 +366,90 @@ footer {
 }
 
 /* End Emoji Icon */
+
+/* Typing */
+/* Font chữ cơ bản cho dễ nhìn */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.box-typing {
+    margin-bottom: 15px;
+    /* Khoảng cách giữa các user */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.inner-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #050505;
+    margin-bottom: 4px;
+    /* Khoảng cách giữa tên và bong bóng chat */
+    margin-left: 8px;
+    /* Thụt vào một chút cho thẳng hàng với độ cong của bong bóng */
+}
+
+.inner-dots {
+    background-color: #f0f2f5;
+    /* Màu xám nền giống Facebook */
+    padding: 10px 12px;
+    border-radius: 18px;
+    /* Bo tròn góc */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    /* Khoảng cách giữa các chấm */
+    width: fit-content;
+}
+
+.inner-dots span {
+    width: 6px;
+    height: 6px;
+    background-color: #65676b;
+    /* Màu xám đậm của dấu chấm */
+    border-radius: 50%;
+    display: block;
+    opacity: 0.4;
+    /* Thêm animation nhấp nháy */
+    animation: typing-animation 1.4s infinite ease-in-out both;
+}
+
+/* Chỉnh độ trễ (delay) để tạo hiệu ứng sóng lượn */
+.inner-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.inner-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.inner-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Định nghĩa chuyển động nhấp nháy */
+@keyframes typing-animation {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scale(1.2);
+        /* Phóng to nhẹ */
+        opacity: 1;
+        /* Đậm lên */
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+}
+
+/* End Typing */
