@@ -16,6 +16,8 @@ html
         type="text/css"
         href="https://unpkg.com/file-upload-with-preview/dist/style.css"
     )
+    //- ViewerJS
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.css")
 
     body
         include ../partials/header.pug
@@ -32,9 +34,8 @@ html
          
         //- emoji-picker-element
         <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-
-        //- Upload file with preview
-        //- <script src="https://unpkg.com/file-upload-with-preview/dist/index.js"></script>
+        //- ViewJS
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.js"></script>
 
         script(type="module" src="/client/js/chat.js")
 
