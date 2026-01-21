@@ -91,7 +91,7 @@ const showTyping = () => {
     clearTimeout(timeOut)
     timeOut = setTimeout(() => {
         socket.emit("CLIENT_SEND_TYPING", "hidden")
-    }, 5000)
+    }, 3000)
 }
 // End Show typing
 // Insert Icon to Input
