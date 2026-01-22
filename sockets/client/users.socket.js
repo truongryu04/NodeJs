@@ -62,5 +62,79 @@ module.exports = (res) => {
                 })
             }
         })
+
+        // Chức năng từ chối kết bạn
+        socket.on("CLIENT_REFUSE_FRIEND", async (userId) => {
+            const myUserId = res.locals.user.id  //id của (B)
+
+            // Xoá id của A vào acceptFriends của B
+            const existAinB = await User.findOne({
+                _id: myUserId,
+                acceptFriends: userId
+            })
+            if (existAinB) {
+                await User.updateOne({
+                    _id: myUserId,
+                }, {
+                    $pull: { acceptFriends: userId }
+                })
+            }
+            // Xoá id của B vào requestFriends của A
+            const existBinA = await User.findOne({
+                _id: userId,
+                requestFriends: myUserId
+            })
+            if (existBinA) {
+                await User.updateOne({
+                    _id: userId,
+                }, {
+                    $pull: { requestFriends: myUserId }
+                })
+            }
+        })
+
+        // Chức năng chấp nhận kết bạn
+        socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
+            const myUserId = res.locals.user.id  //id của (B)
+            // Thêm {user_id,room_chat_id} của A vào friendList B
+            // Xoá id của A vào acceptFriends của B
+            const existAinB = await User.findOne({
+                _id: myUserId,
+                acceptFriends: userId
+            })
+            if (existAinB) {
+                await User.updateOne({
+                    _id: myUserId,
+                }, {
+                    $push: {
+                        friendList: {
+                            user_id: userId,
+                            room_chat_id: ""
+                        }
+                    },
+                    $pull: { acceptFriends: userId }
+                })
+            }
+
+            // Thêm {user_id,room_chat_id} của b vào friendList A
+            // Xoá id của B vào requestFriends của A
+            const existBinA = await User.findOne({
+                _id: userId,
+                requestFriends: myUserId
+            })
+            if (existBinA) {
+                await User.updateOne({
+                    _id: userId,
+                }, {
+                    $push: {
+                        friendList: {
+                            user_id: myUserId,
+                            room_chat_id: ""
+                        }
+                    },
+                    $pull: { requestFriends: myUserId }
+                })
+            }
+        })
     })
 }
