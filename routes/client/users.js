@@ -5,6 +5,7 @@ const controller = require("../../controllers/client/usersController")
 
 
 router.get('/not-friend', controller.notFriend)
+router.get('/request', controller.request)
 
 
 
