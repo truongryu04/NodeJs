@@ -5,7 +5,7 @@ module.exports = (res) => {
     _io.once('connection', (socket) => {
         // Chức năng gửi yêu cầu
         socket.on("CLIENT_ADD_FRIEND", async (userId) => {
-            const myUserId = res.locals.user.id//id của người gửi kết bạn(A)
+            const myUserId = res.locals.user.id //id của người gửi kết bạn(A)
             // Thêm id của A vào acceptFriends của B
             const existAinB = await User.findOne({
                 _id: userId,
@@ -30,6 +30,24 @@ module.exports = (res) => {
                     $push: { requestFriends: userId }
                 })
             }
+            // Lấy độ dài acceptFiend của B trả cho B
+            const infoUser = await User.findOne({
+                _id: userId
+            })
+            const lengthAcceptFriends = infoUser.acceptFriends.length
+            socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+                userId: userId,
+                lengthAcceptFriends: lengthAcceptFriends
+            })
+
+            // Lấy infor của A vầ trả về cho B
+            const infoUserA = await User.findOne({
+                _id: myUserId
+            }).select("id avatar fullName")
+            socket.broadcast.emit("SERVER_RETURN_INFO_ACCEPT_FRIEND", {
+                userId: userId,
+                infoUserA: infoUserA
+            })
         })
 
 
@@ -61,6 +79,15 @@ module.exports = (res) => {
                     $pull: { requestFriends: userId }
                 })
             }
+            // Lấy độ dài acceptFiend của B trả cho B
+            const infoUser = await User.findOne({
+                _id: userId
+            })
+            const lengthAcceptFriends = infoUser.acceptFriends.length
+            socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+                userId: userId,
+                lengthAcceptFriends: lengthAcceptFriends
+            })
         })
 
         // Chức năng từ chối kết bạn
