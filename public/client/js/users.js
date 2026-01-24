@@ -10,7 +10,7 @@ if (listBtnAddFriend.length > 0) {
         })
     })
 }
-// Chức năng gửi yêu câù
+
 
 // Chức năng huỷ gửi yêu cầu
 const listBtnCancelFriend = document.querySelectorAll("[btn-cancel-friend]")
@@ -24,7 +24,7 @@ if (listBtnCancelFriend.length > 0) {
         })
     })
 }
-// Chức năng huỷ gửi yêu câù
+
 
 // Chức năng từ chối kết bạn
 const refuseFriend = (button) => {
@@ -41,7 +41,7 @@ if (listBtnRefuseFriend.length > 0) {
         refuseFriend(button)
     })
 }
-// Chức năng từ chối kết bạn
+
 
 
 // Chức năng chấp nhận kết bạn
@@ -59,7 +59,7 @@ if (listBtnAcceptFriend.length > 0) {
         acceptFriend(button)
     })
 }
-// Chức năng chấp nhận kết bạn
+
 
 // SERVER_RETURN_LENGTH_ACCEPT_FRIEND
 const badgeUserAccept = document.querySelector("[badge-users-accept]")
@@ -85,6 +85,7 @@ if (dataUsersAccept) {
             // Vẽ user ra giao diện
             const div = document.createElement("div")
             div.classList.add("col-4")
+            div.setAttribute("user-id", data.infoUserA._id)
             div.innerHTML = `
                 <div class="box-user">
                     <div class="inner-avatar">
@@ -114,3 +115,19 @@ if (dataUsersAccept) {
 }
 
 // End SERVER_RETURN_INFO_ACCEPT_FRIEND
+
+
+// SERVER_RETURN_USER_ID_CANCEL_FRIEND
+socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
+    const userIdA = data.userIdA
+    const boxUserRemove = document.querySelector(`[user-id='${userIdA}']`)
+    if (boxUserRemove) {
+        const dataUsersAccept = document.querySelector("[data-users-accept]")
+        const userId = dataUsersAccept.getAttribute("data-users-accept")
+        if (userId === data.userId) {
+            dataUsersAccept.removeChild(boxUserRemove)
+        }
+
+    }
+})
+// End SERVER_RETURN_USER_ID_CANCEL_FRIEND

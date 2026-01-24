@@ -88,6 +88,11 @@ module.exports = (res) => {
                 userId: userId,
                 lengthAcceptFriends: lengthAcceptFriends
             })
+            // Lấy Id của A và trả về cho B
+            socket.broadcast.emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
+                userId: userId,
+                userIdA: myUserId
+            })
         })
 
         // Chức năng từ chối kết bạn
