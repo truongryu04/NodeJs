@@ -36,8 +36,10 @@ header.header
                         if(user)
                             li 
                                 a(href="/user/logout") Đăng xuất
+                            //- li 
+                            //-     a(href="/chat") Chat    
                             li 
-                                a(href="/chat") Chat                            
+                                a(href="/users/friends") Bạn bè                                                    
                             li 
                                 a(href="/user/infor") #{user.fullName}                                
                         else

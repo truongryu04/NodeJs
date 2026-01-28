@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router()
 const controller = require("../../controllers/client/chatController")
-
-router.get('/', controller.index)
+const chatMiddleware = require("../../middlewares/client/chatMiddleware")
+router.get('/:roomChatId', chatMiddleware.isAccept, controller.index)
 
 
 
