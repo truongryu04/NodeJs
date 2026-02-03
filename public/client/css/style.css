@@ -610,3 +610,67 @@ body {
     height: 100%;
     object-fit: cover;
 }
+
+/* Tạo phòng chat */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Tùy chỉnh Input text */
+.form-control {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #dfe1e5;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
+}
+
+
+/* Bo tròn item đầu và cuối để tạo thành 1 khối */
+/* .form-check:first-of-type {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.form-check:last-of-type {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-bottom: 0;
+} */
+
+
+/* Hiệu ứng khi di chuột vào tên bạn bè */
+.form-check:hover {
+    background-color: #f8f9fa;
+}
+
+/* Tùy chỉnh nút checkbox */
+.form-check-input {
+    margin-top: 0;
+    margin-right: 10px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 15px;
+    user-select: none;
+    /* Chống bôi đen text khi click nhanh */
+    width: 100%;
+    /* Để click vào tên cũng chọn được checkbox */
+}
+
+
+/* End tạo phòng chat */
