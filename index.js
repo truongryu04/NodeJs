@@ -14,7 +14,7 @@ const { Server } = require("socket.io")
 
 
 app.use(methodOverride('_method'))
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 require("dotenv").config()
 

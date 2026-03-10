@@ -54,7 +54,7 @@ block main
                                     type = "text"
                                     class = "form-control"
                                     id="fullName"
-                                    name = "fullName"
+                                    name = "userInfor[fullName]"
                                     required
                                 )
                             div(class="form-group mb-3")
@@ -63,7 +63,7 @@ block main
                                     type = "text"
                                     class = "form-control"
                                     id="phone"
-                                    name = "phone"
+                                    name = "userInfor[phone]"
                                     required
                                 )
                             div(class="form-group mb-3")
@@ -72,9 +72,21 @@ block main
                                     type = "text"
                                     class = "form-control"
                                     id="address"
-                                    name = "address"
+                                    name = "userInfor[address]"
                                     required
                                 )
+                            div(class="form-group mb-4")
+                                lable(for="paymentMethod") Phương thức thanh toán
+                                select(
+                                    class="form-control"
+                                    id="paymentMethod"
+                                    name="paymentMethod"
+                                    required
+                                )
+                                    option(value="cod" selected) Thanh toán khi nhận hàng (COD)
+                                    option(value="bank") Chuyển khoản ngân hàng
+                                    option(value="momo") Ví MoMo
+                                    option(value="vnpay") VNPay
                             div(class="form-group mb-3")
                                 button(
                                     type ="submit"

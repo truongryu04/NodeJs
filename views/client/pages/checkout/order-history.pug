@@ -21,7 +21,7 @@ block main
                                     h5.mb-1 Đơn hàng: #{order._id}
                                     p.mb-0.text-muted Ngày đặt: #{order.createdAtFormatted}
                                 div.text-end
-                                    span.badge.text-bg-success.mb-2 Đã đặt hàng
+                                    span(class=`badge ${order.statusBadgeClass} mb-2`) #{order.statusLabel}
                                     h6.mb-0 Tổng tiền: #{order.totalPrice}$
                             .card-body
                                 .row.mb-3
@@ -34,6 +34,13 @@ block main
                                     .col-md-4
                                         strong Địa chỉ:
                                         span  #{order.userInfor.address}
+                                .row.mb-3
+                                    .col-md-6
+                                        strong Trạng thái đơn hàng:
+                                        span  #{order.statusLabel}
+                                    .col-md-6
+                                        strong Phương thức thanh toán:
+                                        span  #{order.paymentMethodLabel}
                                 .table-responsive
                                     table.table.table-bordered.align-middle
                                         thead

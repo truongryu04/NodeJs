@@ -4,6 +4,28 @@ const Cart = require("../../models/cartModel")
 const Order = require("../../models/orderModel")
 const productHelper = require("../../helpers/product")
 
+const PAYMENT_METHODS = ["cod", "bank", "momo", "vnpay"]
+const PAYMENT_METHOD_LABELS = {
+    cod: "Thanh toán khi nhận hàng",
+    bank: "Chuyển khoản ngân hàng",
+    momo: "Ví MoMo",
+    vnpay: "VNPay"
+}
+const STATUS_LABELS = {
+    pending: "Chờ xác nhận",
+    confirmed: "Đã xác nhận",
+    shipping: "Đang giao hàng",
+    delivered: "Đã giao hàng",
+    cancelled: "Đã hủy"
+}
+const STATUS_BADGE_CLASSES = {
+    pending: "text-bg-warning",
+    confirmed: "text-bg-primary",
+    shipping: "text-bg-info",
+    delivered: "text-bg-success",
+    cancelled: "text-bg-danger"
+}
+
 const buildOrderDetail = async (order) => {
     const orderDetail = order.toObject()
 
@@ -23,6 +45,9 @@ const buildOrderDetail = async (order) => {
 
     orderDetail.totalPrice = orderDetail.products.reduce((sum, item) => sum + item.totalPrice, 0)
     orderDetail.createdAtFormatted = orderDetail.createdAt ? new Date(orderDetail.createdAt).toLocaleString("vi-VN") : ""
+    orderDetail.paymentMethodLabel = PAYMENT_METHOD_LABELS[orderDetail.paymentMethod] || orderDetail.paymentMethod || "Không xác định"
+    orderDetail.statusLabel = STATUS_LABELS[orderDetail.status] || orderDetail.status || "Không xác định"
+    orderDetail.statusBadgeClass = STATUS_BADGE_CLASSES[orderDetail.status] || "text-bg-secondary"
 
     return orderDetail
 }
@@ -69,8 +94,7 @@ module.exports.order = async (req, res) => {
             _id: product.product_id,
             deleted: false,
             status: "active"
-        }).select("price discountPercentage stock")
-
+        }).select("title thumbnail price discountPercentage stock")
         if (!productInfor) {
             req.flash("error", "Có sản phẩm không còn khả dụng trong giỏ hàng")
             return res.redirect("/cart")
@@ -83,6 +107,8 @@ module.exports.order = async (req, res) => {
 
         const obProduct = {
             product_id: product.product_id,
+            title: product.title,
+            thumbnail: product.thumbnail,
             price: 0,
             discountPercentage: 0,
             quantity: product.quantity
@@ -92,12 +118,25 @@ module.exports.order = async (req, res) => {
         products.push(obProduct)
     }
 
-    const userInfor = req.body
+    const userInfor = req.body.userInfor || {
+        fullName: req.body.fullName,
+        phone: req.body.phone,
+        address: req.body.address
+    }
+    console.log(req.body.userInfor)
+    const paymentMethod = PAYMENT_METHODS.includes(req.body.paymentMethod) ? req.body.paymentMethod : "cod"
+
+    if (!userInfor.fullName || !userInfor.phone || !userInfor.address) {
+        req.flash("error", "Vui lòng điền đầy đủ thông tin đặt hàng")
+        return res.redirect("/checkout")
+    }
+
     const orderInfor = {
         user_id: res.locals.user.id,
         cart_id: cartId,
         userInfor: userInfor,
-        products: products
+        products: products,
+        paymentMethod: paymentMethod
     }
     const order = await new Order(orderInfor).save()
 

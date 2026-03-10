@@ -37,6 +37,13 @@ block main
                             tr 
                                 th Địa chỉ 
                                 td #{order.userInfor.address}
+                            tr
+                                th Trạng thái đơn hàng
+                                td
+                                    span(class=`badge ${order.statusBadgeClass}`) #{order.statusLabel}
+                            tr
+                                th Phương thức thanh toán
+                                td #{order.paymentMethodLabel}
         .row 
             .col-12 
                 h4 Chi tiết đơn hàng 
