@@ -188,3 +188,36 @@ module.exports.listOrder = async (req, res) => {
         orders: orderList,
     })
 }
+// [PATCH] checkout/cancel/:orderId'
+
+module.exports.cancelOrder = async (req, res) => {
+    const orderId = req.params.orderId
+    const userId = res.locals.user.id
+    const order = await Order.findOne({
+        _id: orderId,
+        user_id: userId,
+        deleted: false
+    })
+    if (order) {
+        if (order.status !== "pending") {
+            req.flash("error", "Đơn hàng không thể huỷ")
+            return res.redirect("/checkout/order-history")
+        }
+
+        await Order.updateOne({
+            _id: orderId,
+            user_id: userId
+        }, {
+            status: "cancelled",
+            cancelledAt: new Date()
+        })
+        req.flash("success", "Huỷ thành công !")
+        return res.redirect("/checkout/order-history")
+
+
+    }
+    else {
+        req.flash("error", "Đơn hàng không huỷ được")
+        return res.redirect("/checkout/order-history")
+    }
+}
