@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-success(2000)
+    +alert-error(2000)
+
+    .container.my-3
+        .row
+            .col-12
+                +box-head("Lịch sử mua hàng")
+
+        if orders.length > 0
+            each order in orders
+                .row.mb-4
+                    .col-12
+                        .card.shadow-sm
+                            .card-header.d-flex.justify-content-between.align-items-center.flex-wrap.gap-2
+                                div
+                                    h5.mb-1 Đơn hàng: #{order._id}
+                                    p.mb-0.text-muted Ngày đặt: #{order.createdAtFormatted}
+                                div.text-end
+                                    span.badge.text-bg-success.mb-2 Đã đặt hàng
+                                    h6.mb-0 Tổng tiền: #{order.totalPrice}$
+                            .card-body
+                                .row.mb-3
+                                    .col-md-4
+                                        strong Họ tên:
+                                        span  #{order.userInfor.fullName}
+                                    .col-md-4
+                                        strong Số điện thoại:
+                                        span  #{order.userInfor.phone}
+                                    .col-md-4
+                                        strong Địa chỉ:
+                                        span  #{order.userInfor.address}
+                                .table-responsive
+                                    table.table.table-bordered.align-middle
+                                        thead
+                                            tr
+                                                th STT
+                                                th Ảnh
+                                                th Tên sản phẩm
+                                                th Giá
+                                                th Số lượng
+                                                th Thành tiền
+                                        tbody
+                                            each item, index in order.products
+                                                tr
+                                                    td #{index + 1}
+                                                    td
+                                                        if item.productInfor.thumbnail
+                                                            img(src=item.productInfor.thumbnail, alt=item.productInfor.title, width="70")
+                                                    td
+                                                        if item.productInfor.slug
+                                                            a(href=`/product/detail/${item.productInfor.slug}`) #{item.productInfor.title}
+                                                        else
+                                                            | #{item.productInfor.title}
+                                                    td #{item.newprice}$
+                                                    td #{item.quantity}
+                                                    td #{item.totalPrice}$
+        else
+            .row
+                .col-12
+                    .alert.alert-info Bạn chưa có đơn hàng nào.

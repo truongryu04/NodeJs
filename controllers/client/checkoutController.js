@@ -1,10 +1,31 @@
 
 const Product = require("../../models/productModel")
-const Category = require("../../models/categoryModel")
-const categoryHelper = require("../../helpers/category")
 const Cart = require("../../models/cartModel")
 const Order = require("../../models/orderModel")
 const productHelper = require("../../helpers/product")
+
+const buildOrderDetail = async (order) => {
+    const orderDetail = order.toObject()
+
+    for (const product of orderDetail.products) {
+        const productInfor = await Product.findOne({
+            _id: product.product_id
+        }).select("title slug thumbnail")
+
+        product.productInfor = productInfor || {
+            title: "Sản phẩm không còn tồn tại",
+            slug: "",
+            thumbnail: ""
+        }
+        product.newprice = Number(productHelper.priceNewProduct(product))
+        product.totalPrice = product.newprice * product.quantity
+    }
+
+    orderDetail.totalPrice = orderDetail.products.reduce((sum, item) => sum + item.totalPrice, 0)
+    orderDetail.createdAtFormatted = orderDetail.createdAt ? new Date(orderDetail.createdAt).toLocaleString("vi-VN") : ""
+
+    return orderDetail
+}
 // [GET] /checkout
 module.exports.index = async (req, res) => {
     const cart_id = req.cookies.cartId;
@@ -36,32 +57,49 @@ module.exports.order = async (req, res) => {
     const cart = await Cart.findOne({
         _id: cartId
     })
+
+    if (!cart || cart.products.length === 0) {
+        req.flash("error", "Giỏ hàng đang trống")
+        return res.redirect("/cart")
+    }
+
     const products = []
     for (const product of cart.products) {
+        const productInfor = await Product.findOne({
+            _id: product.product_id,
+            deleted: false,
+            status: "active"
+        }).select("price discountPercentage stock")
+
+        if (!productInfor) {
+            req.flash("error", "Có sản phẩm không còn khả dụng trong giỏ hàng")
+            return res.redirect("/cart")
+        }
+
+        if (product.quantity > productInfor.stock) {
+            req.flash("error", "Số lượng sản phẩm trong giỏ hàng vượt quá tồn kho")
+            return res.redirect("/cart")
+        }
+
         const obProduct = {
             product_id: product.product_id,
             price: 0,
             discountPercentage: 0,
             quantity: product.quantity
         }
-        const productInfor = await Product.findOne({
-            _id: product.product_id
-        }).select("price discountPercentage")
         obProduct.price = productInfor.price
         obProduct.discountPercentage = productInfor.discountPercentage
         products.push(obProduct)
     }
+
     const userInfor = req.body
-    console.log(cartId)
-    console.log(products)
     const orderInfor = {
-        // user_id:,
+        user_id: res.locals.user.id,
         cart_id: cartId,
         userInfor: userInfor,
         products: products
     }
-    const order = new Order(orderInfor)
-    order.save()
+    const order = await new Order(orderInfor).save()
 
     await Cart.updateOne({
         _id: cartId
@@ -77,18 +115,37 @@ module.exports.success = async (req, res) => {
     const order = await Order.findOne({
         _id: orderId
     })
-    for (const product of order.products) {
-        const productInfor = await Product.findOne({
-            _id: product.product_id
-        }).select("title slug thumbnail ")
-        product.productInfor = productInfor
-        product.newprice = productHelper.priceNewProduct(product)
-        product.totalPrice = product.newprice * product.quantity
+
+    if (!order || order.user_id !== res.locals.user.id) {
+        req.flash("error", "Không tìm thấy đơn hàng")
+        return res.redirect("/cart")
     }
-    order.totalPrice = order.products.reduce((sum, item) => sum + item.totalPrice, 0)
+
+    const orderDetail = await buildOrderDetail(order)
 
     res.render("client/pages/checkout/success", {
         titlePage: "Đặt hàng thành công",
-        order: order,
+        order: orderDetail,
+    })
+}
+
+
+// [GET] /orders
+module.exports.listOrder = async (req, res) => {
+    const userId = res.locals.user.id
+    const orders = await Order.find({
+        user_id: userId,
+        deleted: false,
+    }).sort({ createdAt: -1 })
+
+    const orderList = []
+    for (const order of orders) {
+        const orderDetail = await buildOrderDetail(order)
+        orderList.push(orderDetail)
+    }
+
+    res.render("client/pages/checkout/order-history", {
+        titlePage: "Lịch sử mua hàng",
+        orders: orderList,
     })
 }
