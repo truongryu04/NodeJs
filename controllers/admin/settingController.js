@@ -14,9 +14,8 @@ module.exports.general = async (req, res) => {
 module.exports.generalPatch = async (req, res) => {
     const settingGeneral = await SettingGeneral.findOne({})
     if (settingGeneral) {
-        await settingGeneral.updateOne({
-            _id: settingGeneral.id
-        }, req.body)
+		// Cập nhật bản ghi hiện có với dữ liệu mới (bao gồm logo đã được middleware gán vào req.body)
+		await SettingGeneral.updateOne({ _id: settingGeneral.id }, req.body)
     }
     else {
         const setting = new SettingGeneral(req.body)

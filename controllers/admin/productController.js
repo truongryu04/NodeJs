@@ -52,7 +52,6 @@ module.exports.index = async (req, res) => {
         const lengthUpdatedBy = product.updatedBy.length
 
         const updateBy = product.updatedBy[lengthUpdatedBy - 1]
-        console.log(updateBy)
         if (updateBy) {
             const user2 = await Account.findOne({
                 deleted: false,

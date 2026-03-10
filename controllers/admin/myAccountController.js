@@ -27,8 +27,6 @@ module.exports.editPatch = async (req, res) => {
     else {
         delete req.body.password
     }
-    console.log(user)
-    console.log(req.body)
     const emailExist = await Account.findOne({ email: req.body.email, deleted: false, _id: { $ne: id } })
     if (!emailExist) {
         try {
