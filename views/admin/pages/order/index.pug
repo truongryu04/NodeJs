@@ -1,0 +1,45 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/format-date-time.pug
+
+block main
+
+    +alert-success("5000")
+    +alert-error("5000")
+
+    h1(class="mb-4") Danh sách đơn hàng
+    .card.mb-3
+        .card-header Danh sách đơn hàng
+        .card-body
+            table(class="table table-hover table-sm align-middle")
+                thead
+                    tr
+                        th STT
+                        th Mã đơn
+                        th Khách hàng
+                        th Số điện thoại
+                        th Địa chỉ
+                        th Số lượng SP
+                        th Tổng tiền
+                        th Thanh toán
+                        th Trạng thái
+                        th Ngày tạo
+                tbody
+                    if (orders.length > 0)
+                        each item, index in orders
+                            tr
+                                td #{index + 1}
+                                td #{item._id}
+                                td #{item.userInfor && item.userInfor.fullName ? item.userInfor.fullName : "-"}
+                                td #{item.userInfor && item.userInfor.phone ? item.userInfor.phone : "-"}
+                                td #{item.userInfor && item.userInfor.address ? item.userInfor.address : "-"}
+                                td #{item.totalProducts}
+                                td #{item.totalAmount}$
+                                td #{item.paymentMethodLabel}
+                                td
+                                    span(class=`badge ${item.statusBadgeClass}`) #{item.statusLabel}
+                                td
+                                    +formatDateTime(item.createdAt)
+                    else
+                        tr
+                            td(colspan="10" class="text-center") Chưa có đơn hàng nào

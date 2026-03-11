@@ -26,8 +26,13 @@ const STATUS_BADGE_CLASSES = {
     cancelled: "text-bg-danger"
 }
 
+const getProductUnitPrice = (product) => {
+    return Math.round((product.price || 0) * (1 - (product.discountPercentage || 0) / 100))
+}
+
 const buildOrderDetail = async (order) => {
     const orderDetail = order.toObject()
+    let computedTotalPrice = 0
 
     for (const product of orderDetail.products) {
         const productInfor = await Product.findOne({
@@ -39,11 +44,13 @@ const buildOrderDetail = async (order) => {
             slug: "",
             thumbnail: ""
         }
-        product.newprice = Number(productHelper.priceNewProduct(product))
+        product.newprice = getProductUnitPrice(product)
         product.totalPrice = product.newprice * product.quantity
+        computedTotalPrice += product.totalPrice
     }
 
-    orderDetail.totalPrice = orderDetail.products.reduce((sum, item) => sum + item.totalPrice, 0)
+    orderDetail.totalPrice = typeof orderDetail.totalPrice === "number" ? orderDetail.totalPrice : computedTotalPrice
+    orderDetail.finalPrice = typeof orderDetail.finalPrice === "number" ? orderDetail.finalPrice : orderDetail.totalPrice
     orderDetail.createdAtFormatted = orderDetail.createdAt ? new Date(orderDetail.createdAt).toLocaleString("vi-VN") : ""
     orderDetail.paymentMethodLabel = PAYMENT_METHOD_LABELS[orderDetail.paymentMethod] || orderDetail.paymentMethod || "Không xác định"
     orderDetail.statusLabel = STATUS_LABELS[orderDetail.status] || orderDetail.status || "Không xác định"
@@ -89,6 +96,8 @@ module.exports.order = async (req, res) => {
     }
 
     const products = []
+    let totalPrice = 0
+    let totalDiscount = 0
     for (const product of cart.products) {
         const productInfor = await Product.findOne({
             _id: product.product_id,
@@ -107,14 +116,16 @@ module.exports.order = async (req, res) => {
 
         const obProduct = {
             product_id: product.product_id,
-            title: product.title,
-            thumbnail: product.thumbnail,
+            title: productInfor.title,
+            thumbnail: productInfor.thumbnail,
             price: 0,
             discountPercentage: 0,
             quantity: product.quantity
         }
         obProduct.price = productInfor.price
         obProduct.discountPercentage = productInfor.discountPercentage
+        totalPrice += productInfor.price * product.quantity
+        totalDiscount += (productInfor.price - getProductUnitPrice(productInfor)) * product.quantity
         products.push(obProduct)
     }
 
@@ -123,7 +134,6 @@ module.exports.order = async (req, res) => {
         phone: req.body.phone,
         address: req.body.address
     }
-    console.log(req.body.userInfor)
     const paymentMethod = PAYMENT_METHODS.includes(req.body.paymentMethod) ? req.body.paymentMethod : "cod"
 
     if (!userInfor.fullName || !userInfor.phone || !userInfor.address) {
@@ -136,7 +146,10 @@ module.exports.order = async (req, res) => {
         cart_id: cartId,
         userInfor: userInfor,
         products: products,
-        paymentMethod: paymentMethod
+        paymentMethod: paymentMethod,
+        totalPrice: totalPrice,
+        totalDiscount: totalDiscount,
+        finalPrice: totalPrice - totalDiscount
     }
     const order = await new Order(orderInfor).save()
 
