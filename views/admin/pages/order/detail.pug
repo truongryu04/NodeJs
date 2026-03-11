@@ -7,111 +7,113 @@ block main
     +alert-success("5000")
     +alert-error("5000")
 
-    .d-flex.justify-content-between.align-items-center.mb-4
-        h1.mb-0 Chi tiết đơn hàng
-        a(
-            href=`${prefixAdmin}/order`
-            class="btn btn-outline-secondary"
-        ) Quay lại
+    if(role.permissions.includes("order_view"))
+        .d-flex.justify-content-between.align-items-center.mb-4
+            h1.mb-0 Chi tiết đơn hàng
+            a(
+                href=`${prefixAdmin}/order`
+                class="btn btn-outline-secondary"
+            ) Quay lại
 
-    .row
-        .col-lg-4.mb-3
-            .card.h-100
-                .card-header Thông tin đơn hàng
-                .card-body
-                    p.mb-2
-                        strong Mã đơn:
-                        span  #{order._id}
-                    p.mb-2
-                        strong Trạng thái:
-                        span(class=`badge ${order.statusBadgeClass} ms-2`) #{order.statusLabel}
-                    p.mb-2
-                        strong Phương thức thanh toán:
-                        span  #{order.paymentMethodLabel}
-                    p.mb-2
-                        strong Ngày tạo:
-                        span  #{order.createdAtFormatted}
-                    if order.cancelledAt
+        .row
+            .col-lg-4.mb-3
+                .card.h-100
+                    .card-header Thông tin đơn hàng
+                    .card-body
                         p.mb-2
-                            strong Ngày hủy:
-                            span
-                                +formatDateTime(order.cancelledAt)
-                    form(
-                        action=`${prefixAdmin}/order/change-status/${order._id}?_method=PATCH`
-                        method="POST"
-                        class="mt-4"
-                    )
-                        label.form-label(for="status") Cập nhật trạng thái
-                        .input-group
-                            select.form-select(name="status" id="status")
-                                each statusItem in orderStatusOptions
-                                    option(
-                                        value=statusItem.value
-                                        selected=statusItem.value === order.status
-                                    ) #{statusItem.label}
-                            button.btn.btn-primary(type="submit") Lưu
-        .col-lg-8.mb-3
-            .card.h-100
-                .card-header Thông tin người nhận
-                .card-body
-                    .row
-                        .col-md-4.mb-3
-                            strong Họ tên
-                            p.mb-0 #{order.userInfor && order.userInfor.fullName ? order.userInfor.fullName : "-"}
-                        .col-md-4.mb-3
-                            strong Số điện thoại
-                            p.mb-0 #{order.userInfor && order.userInfor.phone ? order.userInfor.phone : "-"}
-                        .col-md-4.mb-3
-                            strong Địa chỉ
-                            p.mb-0 #{order.userInfor && order.userInfor.address ? order.userInfor.address : "-"}
+                            strong Mã đơn:
+                            span  #{order._id}
+                        p.mb-2
+                            strong Trạng thái:
+                            span(class=`badge ${order.statusBadgeClass} ms-2`) #{order.statusLabel}
+                        p.mb-2
+                            strong Phương thức thanh toán:
+                            span  #{order.paymentMethodLabel}
+                        p.mb-2
+                            strong Ngày tạo:
+                            span  #{order.createdAtFormatted}
+                        if order.cancelledAt
+                            p.mb-2
+                                strong Ngày hủy:
+                                span
+                                    +formatDateTime(order.cancelledAt)
+                        if(role.permissions.includes("order_edit"))
+                            form(
+                                action=`${prefixAdmin}/order/change-status/${order._id}?_method=PATCH`
+                                method="POST"
+                                class="mt-4"
+                            )
+                                label.form-label(for="status") Cập nhật trạng thái
+                                .input-group
+                                    select.form-select(name="status" id="status")
+                                        each statusItem in orderStatusOptions
+                                            option(
+                                                value=statusItem.value
+                                                selected=statusItem.value === order.status
+                                            ) #{statusItem.label}
+                                    button.btn.btn-primary(type="submit") Lưu
+            .col-lg-8.mb-3
+                .card.h-100
+                    .card-header Thông tin người nhận
+                    .card-body
+                        .row
+                            .col-md-4.mb-3
+                                strong Họ tên
+                                p.mb-0 #{order.userInfor && order.userInfor.fullName ? order.userInfor.fullName : "-"}
+                            .col-md-4.mb-3
+                                strong Số điện thoại
+                                p.mb-0 #{order.userInfor && order.userInfor.phone ? order.userInfor.phone : "-"}
+                            .col-md-4.mb-3
+                                strong Địa chỉ
+                                p.mb-0 #{order.userInfor && order.userInfor.address ? order.userInfor.address : "-"}
 
-    .card
-        .card-header Danh sách sản phẩm
-        .card-body
-            .table-responsive
-                table.table.table-bordered.align-middle
-                    thead
-                        tr
-                            th STT
-                            th Ảnh
-                            th Tên sản phẩm
-                            th Giá gốc
-                            th Giá bán
-                            th Số lượng
-                            th Thành tiền
-                    tbody
-                        if order.products.length > 0
-                            each item, index in order.products
-                                tr
-                                    td #{index + 1}
-                                    td
-                                        if item.productInfor.thumbnail
-                                            img(src=item.productInfor.thumbnail, alt=item.productInfor.title, width="80")
-                                    td
-                                        if item.productInfor.slug
-                                            a(href=`/product/detail/${item.productInfor.slug}` target="_blank") #{item.productInfor.title}
-                                        else
-                                            | #{item.productInfor.title}
-                                    td #{item.price}$
-                                    td #{item.newprice}$
-                                    td #{item.quantity}
-                                    td #{item.totalPrice}$
-                        else
+        .card
+            .card-header Danh sách sản phẩm
+            .card-body
+                .table-responsive
+                    table.table.table-bordered.align-middle
+                        thead
                             tr
-                                td(colspan="7" class="text-center") Không có sản phẩm trong đơn hàng
-            .row.justify-content-end.mt-3
-                .col-md-4
-                    table.table.table-sm
-                        tbody
-                            tr
-                                th Tạm tính
-                                td.text-end #{order.totalPrice}$
-                            tr
-                                th Giảm giá
-                                td.text-end #{order.totalDiscount || 0}$
-                            //- tr
-                            //-     th Phí vận chuyển
-                            //-     td.text-end #{order.shippingFee || 0}$
-                            tr
+                                th STT
+                                th Ảnh
+                                th Tên sản phẩm
+                                th Giá gốc
+                                th Giá bán
+                                th Số lượng
                                 th Thành tiền
-                                td.text-end.fw-bold #{order.totalAmount}$
+                        tbody
+                            if order.products.length > 0
+                                each item, index in order.products
+                                    tr
+                                        td #{index + 1}
+                                        td
+                                            if item.productInfor.thumbnail
+                                                img(src=item.productInfor.thumbnail, alt=item.productInfor.title, width="80")
+                                        td
+                                            if item.productInfor.slug
+                                                a(href=`/product/detail/${item.productInfor.slug}` target="_blank") #{item.productInfor.title}
+                                            else
+                                                | #{item.productInfor.title}
+                                        td #{item.price}$
+                                        td #{item.newprice}$
+                                        td #{item.quantity}
+                                        td #{item.totalPrice}$
+                            else
+                                tr
+                                    td(colspan="7" class="text-center") Không có sản phẩm trong đơn hàng
+                .row.justify-content-end.mt-3
+                    .col-md-4
+                        table.table.table-sm
+                            tbody
+                                tr
+                                    th Tạm tính
+                                    td.text-end #{order.totalPrice}$
+                                tr
+                                    th Giảm giá
+                                    td.text-end #{order.totalDiscount || 0}$
+                                //- tr
+                                //-     th Phí vận chuyển
+                                //-     td.text-end #{order.shippingFee || 0}$
+                                tr
+                                    th Thành tiền
+                                    td.text-end.fw-bold #{order.totalAmount}$

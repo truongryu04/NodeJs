@@ -9,6 +9,9 @@
             if(role.permissions.includes("product-category_view"))   
                 li 
                     a(href = `${prefixAdmin}/product-category`) Danh mục sản phẩm 
+            if(role.permissions.includes("order_view"))
+                li
+                    a(href = `${prefixAdmin}/order`) Quản lý đơn hàng
             if(role.permissions.includes("role_view"))  
                 li 
                     a(href = `${prefixAdmin}/role`) Nhóm quyền
@@ -18,7 +21,6 @@
             if(role.permissions.includes("account_view"))  
                 li 
                     a(href = `${prefixAdmin}/account`) Danh sách tài khoản
-            li
-                a(href = `${prefixAdmin}/order`) Quản lý đơn hàng
-            li 
-                a(href = `${prefixAdmin}/settings/general`) Cài đặt chung 
+            if(role.permissions.includes("setting_edit"))   
+                li 
+                    a(href = `${prefixAdmin}/settings/general`) Cài đặt chung 
