@@ -36,6 +36,20 @@ block main
                             strong Ngày hủy:
                             span
                                 +formatDateTime(order.cancelledAt)
+                    form(
+                        action=`${prefixAdmin}/order/change-status/${order._id}?_method=PATCH`
+                        method="POST"
+                        class="mt-4"
+                    )
+                        label.form-label(for="status") Cập nhật trạng thái
+                        .input-group
+                            select.form-select(name="status" id="status")
+                                each statusItem in orderStatusOptions
+                                    option(
+                                        value=statusItem.value
+                                        selected=statusItem.value === order.status
+                                    ) #{statusItem.label}
+                            button.btn.btn-primary(type="submit") Lưu
         .col-lg-8.mb-3
             .card.h-100
                 .card-header Thông tin người nhận

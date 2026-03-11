@@ -23,6 +23,14 @@ const PAYMENT_METHOD_LABELS = {
     vnpay: "VNPay"
 }
 
+const ORDER_STATUS_OPTIONS = [
+    { value: "pending", label: "Chờ xác nhận" },
+    { value: "confirmed", label: "Đã xác nhận" },
+    { value: "shipping", label: "Đang giao hàng" },
+    { value: "delivered", label: "Đã giao hàng" },
+    { value: "cancelled", label: "Đã hủy" }
+]
+
 // [GET] /admin/order
 module.exports.index = async (req, res) => {
     let find = {
@@ -64,10 +72,57 @@ module.exports.detail = async (req, res) => {
 
     res.render("admin/pages/order/detail", {
         titlePage: "Trang chi tiết đơn hàng",
-        order: orderDetail
+        order: orderDetail,
+        orderStatusOptions: ORDER_STATUS_OPTIONS
     })
 }
-// [GET] /admin/order/change-status/:status/:orderId
+// [PATCH] /admin/order/change-status/:orderId
 module.exports.changeStatus = async (req, res) => {
+    const orderId = req.params.orderId
+    const status = req.body.status
 
+    if (!orderId || !status) {
+        req.flash("error", "Thay đổi trạng thái không hợp lệ")
+        return res.redirect("back")
+    }
+
+    if (!Object.keys(STATUS_LABELS).includes(status)) {
+        req.flash("error", "Trạng thái không hợp lệ")
+        return res.redirect("back")
+    }
+
+    const order = await Order.findOne({
+        _id: orderId,
+        deleted: false
+    })
+
+    if (!order) {
+        req.flash("error", "Không tìm thấy đơn hàng")
+        return res.redirect("back")
+    }
+
+    const updateData = {
+        status: status
+    }
+
+    if (status === "cancelled") {
+        updateData.cancelledAt = new Date()
+    } else {
+        updateData.cancelledAt = null
+    }
+
+    if (status === "delivered") {
+        updateData.deliveredAt = new Date()
+    } else {
+        updateData.deliveredAt = null
+    }
+
+    await Order.updateOne({
+        _id: orderId,
+        deleted: false
+    }, updateData)
+
+    req.flash("success", "Thay đổi trạng thái thành công")
+    const backURL = req.header('Referer')
+    res.redirect(backURL)
 }
