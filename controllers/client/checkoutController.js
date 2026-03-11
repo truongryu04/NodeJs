@@ -3,7 +3,7 @@ const Product = require("../../models/productModel")
 const Cart = require("../../models/cartModel")
 const Order = require("../../models/orderModel")
 const productHelper = require("../../helpers/product")
-
+const orderHelper = require("../../helpers/order")
 const PAYMENT_METHODS = ["cod", "bank", "momo", "vnpay"]
 const PAYMENT_METHOD_LABELS = {
     cod: "Thanh toán khi nhận hàng",
@@ -26,38 +26,6 @@ const STATUS_BADGE_CLASSES = {
     cancelled: "text-bg-danger"
 }
 
-const getProductUnitPrice = (product) => {
-    return Math.round((product.price || 0) * (1 - (product.discountPercentage || 0) / 100))
-}
-
-const buildOrderDetail = async (order) => {
-    const orderDetail = order.toObject()
-    let computedTotalPrice = 0
-
-    for (const product of orderDetail.products) {
-        const productInfor = await Product.findOne({
-            _id: product.product_id
-        }).select("title slug thumbnail")
-
-        product.productInfor = productInfor || {
-            title: "Sản phẩm không còn tồn tại",
-            slug: "",
-            thumbnail: ""
-        }
-        product.newprice = getProductUnitPrice(product)
-        product.totalPrice = product.newprice * product.quantity
-        computedTotalPrice += product.totalPrice
-    }
-
-    orderDetail.totalPrice = typeof orderDetail.totalPrice === "number" ? orderDetail.totalPrice : computedTotalPrice
-    orderDetail.finalPrice = typeof orderDetail.finalPrice === "number" ? orderDetail.finalPrice : orderDetail.totalPrice
-    orderDetail.createdAtFormatted = orderDetail.createdAt ? new Date(orderDetail.createdAt).toLocaleString("vi-VN") : ""
-    orderDetail.paymentMethodLabel = PAYMENT_METHOD_LABELS[orderDetail.paymentMethod] || orderDetail.paymentMethod || "Không xác định"
-    orderDetail.statusLabel = STATUS_LABELS[orderDetail.status] || orderDetail.status || "Không xác định"
-    orderDetail.statusBadgeClass = STATUS_BADGE_CLASSES[orderDetail.status] || "text-bg-secondary"
-
-    return orderDetail
-}
 // [GET] /checkout
 module.exports.index = async (req, res) => {
     const cart_id = req.cookies.cartId;
@@ -125,7 +93,7 @@ module.exports.order = async (req, res) => {
         obProduct.price = productInfor.price
         obProduct.discountPercentage = productInfor.discountPercentage
         totalPrice += productInfor.price * product.quantity
-        totalDiscount += (productInfor.price - getProductUnitPrice(productInfor)) * product.quantity
+        totalDiscount += (productInfor.price - productHelper.priceNewProduct(productInfor)) * product.quantity
         products.push(obProduct)
     }
 
@@ -173,7 +141,7 @@ module.exports.success = async (req, res) => {
         return res.redirect("/cart")
     }
 
-    const orderDetail = await buildOrderDetail(order)
+    const orderDetail = await orderHelper.buildOrderDetail(order)
 
     res.render("client/pages/checkout/success", {
         titlePage: "Đặt hàng thành công",
@@ -192,7 +160,7 @@ module.exports.listOrder = async (req, res) => {
 
     const orderList = []
     for (const order of orders) {
-        const orderDetail = await buildOrderDetail(order)
+        const orderDetail = await orderHelper.buildOrderDetail(order)
         orderList.push(orderDetail)
     }
 
@@ -201,8 +169,8 @@ module.exports.listOrder = async (req, res) => {
         orders: orderList,
     })
 }
-// [PATCH] checkout/cancel/:orderId'
 
+// [PATCH] checkout/cancel/:orderId'
 module.exports.cancelOrder = async (req, res) => {
     const orderId = req.params.orderId
     const userId = res.locals.user.id

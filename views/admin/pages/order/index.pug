@@ -24,6 +24,7 @@ block main
                         th Thanh toán
                         th Trạng thái
                         th Ngày tạo
+                        th Hành động
                 tbody
                     if (orders.length > 0)
                         each item, index in orders
@@ -40,6 +41,11 @@ block main
                                     span(class=`badge ${item.statusBadgeClass}`) #{item.statusLabel}
                                 td
                                     +formatDateTime(item.createdAt)
+                                td
+                                    a(
+                                        href=`${prefixAdmin}/order/detail/${item._id}`
+                                        class="btn btn-secondary btn-sm"
+                                    ) Chi tiết
                     else
                         tr
-                            td(colspan="10" class="text-center") Chưa có đơn hàng nào
+                            td(colspan="11" class="text-center") Chưa có đơn hàng nào
