@@ -1,13 +1,29 @@
 extends ../../layouts/default.pug
+include ../../mixins/fillter-status
+include ../../mixins/search
+include ../../mixins/pagination.pug
 include ../../mixins/alert.pug
 include ../../mixins/format-date-time.pug
 
 block main
 
+    - const orderFilterStatus = typeof fillterStatus !== "undefined" ? fillterStatus : []
+    - const orderKeyword = typeof keyword !== "undefined" ? keyword : ""
+    - const orderPagination = typeof pagination !== "undefined" ? pagination : { currentPage: 1, limitItem: orders.length, totalPage: 1 }
+
     +alert-success("5000")
     +alert-error("5000")
 
     h1(class="mb-4") Danh sách đơn hàng
+    .card.mb-3
+        .card-header Bộ lọc và tìm kiếm
+        .card-body
+            .row
+                .col-6
+                    if orderFilterStatus.length > 0
+                        +fillter-status(orderFilterStatus)
+                .col-6
+                    +search(orderKeyword)
     .card.mb-3
         .card-header Danh sách đơn hàng
         .card-body
@@ -29,7 +45,7 @@ block main
                     if (orders.length > 0)
                         each item, index in orders
                             tr
-                                td #{index + 1}
+                                td #{(orderPagination.currentPage - 1) * orderPagination.limitItem + index + 1}
                                 td #{item._id}
                                 td #{item.userInfor && item.userInfor.fullName ? item.userInfor.fullName : "-"}
                                 td #{item.userInfor && item.userInfor.phone ? item.userInfor.phone : "-"}
@@ -49,3 +65,5 @@ block main
                     else
                         tr
                             td(colspan="11" class="text-center") Chưa có đơn hàng nào
+    if orderPagination.totalPage > 1
+        +pagination(orderPagination)

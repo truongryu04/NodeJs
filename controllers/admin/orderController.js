@@ -1,5 +1,8 @@
 const Order = require("../../models/orderModel")
 const orderHelper = require("../../helpers/order")
+const searchHelper = require("../../helpers/search")
+const paginationHelper = require("../../helpers/pagination")
+const fillterOrderStatus = require("../../helpers/filterOrderStatus")
 const STATUS_LABELS = {
     pending: "Chờ xác nhận",
     confirmed: "Đã xác nhận",
@@ -33,11 +36,32 @@ const ORDER_STATUS_OPTIONS = [
 
 // [GET] /admin/order
 module.exports.index = async (req, res) => {
+    const filterStatus = fillterOrderStatus(req.query)
     let find = {
         deleted: false,
     }
 
-    const orders = await Order.find(find).sort({ createdAt: -1 })
+    if (req.query.status) {
+        find.status = req.query.status
+    }
+    const objectSearch = searchHelper(req.query)
+    if (objectSearch.keyword) {
+        find.$or = [
+            { "userInfor.fullName": objectSearch.regex },
+            { "userInfor.phone": objectSearch.regex }
+        ]
+    }
+    const countOrder = await Order.countDocuments(find)
+    const objectPagination = paginationHelper(
+        {
+            currentPage: 1,
+            limitItem: 10,
+        },
+        req.query,
+        countOrder
+    )
+    const orders = await Order.find(find).sort({ createdAt: -1 }).limit(objectPagination.limitItem).skip(objectPagination.skip)
+
     const orderList = orders.map(order => {
         const orderObject = order.toObject()
         orderObject.totalProducts = orderObject.products.reduce((sum, item) => sum + (item.quantity || 0), 0)
@@ -50,7 +74,10 @@ module.exports.index = async (req, res) => {
 
     res.render("admin/pages/order/index", {
         titlePage: "Trang quản lý đơn hàng",
-        orders: orderList
+        orders: orderList,
+        fillterStatus: filterStatus,
+        keyword: objectSearch.keyword,
+        pagination: objectPagination,
     })
 }
 
