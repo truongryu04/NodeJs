@@ -78,6 +78,7 @@ module.exports.index = async (req, res) => {
         fillterStatus: filterStatus,
         keyword: objectSearch.keyword,
         pagination: objectPagination,
+        orderStatusOptions: ORDER_STATUS_OPTIONS,
     })
 }
 

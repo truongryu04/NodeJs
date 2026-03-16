@@ -126,3 +126,39 @@
 }
 
 /* End Image Preview */
+
+/* Order status select */
+.order-status-select {
+    font-weight: 600;
+    border-width: 1px;
+}
+
+.order-status-select.status-pending {
+    background: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+.order-status-select.status-confirmed {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #ffffff;
+}
+
+.order-status-select.status-shipping {
+    background: #0dcaf0;
+    border-color: #0dcaf0;
+    color: #212529;
+}
+
+.order-status-select.status-delivered {
+    background: #198754;
+    border-color: #198754;
+    color: #ffffff;
+}
+
+.order-status-select.status-cancelled {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+}
