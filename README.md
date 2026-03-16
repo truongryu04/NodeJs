@@ -4,7 +4,7 @@ Ecommerce-NodeJS là hệ thống cho một ứng dụng thương mại điện 
 
 ## 1) Điểm nổi bật
 
-- Kiến trúc MVC rõ ràng: `controllers`, `models`, `routes`, `middlewares`, `helpers`, `views`.
+- Kiến trúc MVC: `controllers`, `models`, `routes`, `middlewares`, `helpers`, `views`.
 - Phân tách luồng **Client** và **Admin**:
   - Client: sản phẩm, tìm kiếm, giỏ hàng, checkout, tài khoản người dùng, chat.
   - Admin: dashboard, sản phẩm, danh mục, đơn hàng, vai trò, tài khoản, cài đặt.
