@@ -1,6 +1,6 @@
 /* Header */
 .header {
-    background: #202020;
+    background: #00695c;
     padding: 10px 0;
     position: sticky;
     top: 0;
@@ -17,8 +17,8 @@
 /* Body */
 .body .sider {
     width: 150px;
-    background: #323232;
-    color: #fff;
+    background: #004d40;
+    color: #e0f2f1;
     height: calc(100vh - 56px);
     position: fixed;
     top: 56px;
@@ -40,10 +40,10 @@
 }
 
 .sider .inner-menu ul li a {
-    color: #fff;
+    color: #e0f2f1;
     display: block;
     padding: 6px 10px;
-    border-bottom: 1px solid #515151;
+    border-bottom: 1px solid #00695c;
     text-decoration: none;
 }
 
@@ -160,5 +160,40 @@
 .order-status-select.status-cancelled {
     background: #dc3545;
     border-color: #dc3545;
+    color: #ffffff;
+}
+
+/* Button overrides - admin */
+.btn-primary {
+    background-color: #009688;
+    border-color: #009688;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #00796b;
+    border-color: #00796b;
+}
+
+.btn-success {
+    background-color: #43a047;
+    border-color: #43a047;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    background-color: #2e7d32;
+    border-color: #2e7d32;
+}
+
+.btn-outline-success {
+    color: #009688;
+    border-color: #009688;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+    background-color: #009688;
+    border-color: #009688;
     color: #ffffff;
 }

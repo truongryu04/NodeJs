@@ -90,13 +90,13 @@ module.exports.changeMulti = async (req, res) => {
     res.redirect(backURL)
 }
 
-// [DELETE] /admin/product/delete/:id
+// [DELETE] /admin/product-category/delete/:id
 module.exports.deleteItem = async (req, res) => {
     const id = req.params.id
 
     // await Product.deleteOne({ _id: id })
     await Category.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() })
-    req.flash("success", `Xoá thành công sản phẩm !`)
+    req.flash("success", `Xoá thành công danh mục sản phẩm !`)
     const backURL = req.header('Referer')
     // res.redirect('../..');
     res.redirect(backURL)
@@ -118,8 +118,12 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/product-category/create
 module.exports.createPost = async (req, res) => {
-    const permission = res.locals.role.permission
-    if (permission.includes("product-category_create")) {
+    // Lấy mảng quyền đúng field "permissions" từ Role
+    const permissions = res.locals.role && Array.isArray(res.locals.role.permissions)
+        ? res.locals.role.permissions
+        : []
+    console.log("Role permissions:", permissions)
+    if (permissions.includes("product-category_create")) {
         if (req.body.position == "") {
             const countProduct = await Category.countDocuments();
             req.body.position = countProduct + 1
@@ -151,7 +155,7 @@ module.exports.edit = async (req, res) => {
         const newCategories = createTreeHelper.createTree(categories)
         if (category) {
             res.render("admin/pages/product-category/edit", {
-                titlePage: "Chỉnh sửa sản phẩm",
+                titlePage: "Chỉnh sửa danh mục sản phẩm",
                 category: category,
                 categories: newCategories,
 
@@ -165,15 +169,13 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/product-category/edit/:id
 module.exports.editPatch = async (req, res) => {
-    req.body.price = parseInt(req.body.price)
-    req.body.discountPercentage = parseInt(req.body.discountPercentage)
-    req.body.stock = parseInt(req.body.stock)
-    req.body.position = parseInt(req.body.position)
-
-    if (req.file) {
-        req.body.thumbnail = `/uploads/${req.file.filename}`
+    // Chỉ xử lý những field thực sự tồn tại trong Category
+    if (req.body.position) {
+        req.body.position = parseInt(req.body.position)
     }
 
+    // Thumbnail đã được uploadCloudMiddleware gán vào req.body.thumbnail (link Cloudinary),
+    // nên không ghi đè lại bằng đường dẫn local.
     try {
         await Category.updateOne({ _id: req.params.id }, req.body)
         req.flash("success", `Cập nhật danh mục sản phẩm thành công`)
