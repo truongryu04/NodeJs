@@ -8,6 +8,6 @@ mixin product-item(item)
             .inner-content 
                 h3.inner-title
                     a(href = `/product/detail/${item.slug}`) #{item.title}
-                .inner-price-new #{item.newPrice}$
-                .inner-price-old #{item.price}$
+                .inner-price-new #{formatVND(item.newPrice)}
+                .inner-price-old #{formatVND(item.price)}
                 .inner-discount #{item.discountPercentage}%   

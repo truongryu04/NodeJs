@@ -30,7 +30,7 @@ block main
                                         img(src=item.productInfo.thumbnail,alt=item.productInfo.title width="80px")
                                     td
                                         a(href=`/product/detail/${item.productInfo.slug}`) #{item.productInfo.title}
-                                    td #{item.productInfo.newprice}$
+                                    td #{formatVND(item.productInfo.newprice)}
                                     td 
                                         input(
                                             type = "number"
@@ -40,13 +40,13 @@ block main
                                             product-id = item.product_id
                                             style = "width:60px"
                                         )
-                                    td #{item.totalprice}
+                                    td #{formatVND(item.totalprice)}
                                     td
                                         a(
                                             href=`cart/delete/${item.product_id}`
                                             class ="btn btn-danger"
                                         ) Xoá
-                h3(class="text-end mt-3") Tổng đơn hàng : #{cartDetail.totalPrice}$
+                h3(class="text-end mt-3") Tổng đơn hàng : #{formatVND(cartDetail.totalPrice)}
                 div(class="text-end mt-3")
                     a(
                         href="/checkout" class="btn btn-success"

@@ -52,7 +52,7 @@ block main
                                     td #{item.userInfor && item.userInfor.phone ? item.userInfor.phone : "-"}
                                     td #{item.userInfor && item.userInfor.address ? item.userInfor.address : "-"}
                                     td #{item.totalProducts}
-                                    td #{item.totalAmount}$
+                                    td #{formatVND(item.totalAmount)}
                                     td #{item.paymentMethodLabel}
                                     td
                                         if(role.permissions.includes("order_edit") && statusOptions.length > 0)

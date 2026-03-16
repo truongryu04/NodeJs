@@ -94,10 +94,10 @@ block main
                                                 a(href=`/product/detail/${item.productInfor.slug}` target="_blank") #{item.productInfor.title}
                                             else
                                                 | #{item.productInfor.title}
-                                        td #{item.price}$
-                                        td #{item.newprice}$
+                                        td #{formatVND(item.price)}
+                                        td #{formatVND(item.newprice)}
                                         td #{item.quantity}
-                                        td #{item.totalPrice}$
+                                        td #{formatVND(item.totalPrice)}
                             else
                                 tr
                                     td(colspan="7" class="text-center") Không có sản phẩm trong đơn hàng
@@ -107,13 +107,13 @@ block main
                             tbody
                                 tr
                                     th Tạm tính
-                                    td.text-end #{order.totalPrice}$
+                                    td.text-end #{formatVND(order.totalPrice)}
                                 tr
                                     th Giảm giá
-                                    td.text-end #{order.totalDiscount || 0}$
+                                    td.text-end #{formatVND(order.totalDiscount || 0)}
                                 //- tr
                                 //-     th Phí vận chuyển
-                                //-     td.text-end #{order.shippingFee || 0}$
+                                //-     td.text-end #{formatVND(order.shippingFee || 0)}
                                 tr
                                     th Thành tiền
-                                    td.text-end.fw-bold #{order.totalAmount}$
+                                    td.text-end.fw-bold #{formatVND(order.totalAmount)}

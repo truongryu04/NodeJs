@@ -64,9 +64,9 @@ block main
                                     td 
                                         img(src=item.productInfor.thumbnail,alt=item.productInfor.title width="80px")
                                     td #{item.productInfor.title}
-                                    td #{item.newprice}$
+                                    td #{formatVND(item.newprice)}
                                     td #{item.quantity}
-                                    td #{item.totalPrice}$
+                                    td #{formatVND(item.totalPrice)}
                     
                         else 
                             tr 
@@ -75,4 +75,4 @@ block main
                                     class="text-center"
                                 ) Không có sản phẩm nào trong đơn hàng
                 if(order.products.length>0)
-                    h3(class="text-end mt-3") Tổng đơn hàng : #{order.totalPrice}$
+                    h3(class="text-end mt-3") Tổng đơn hàng : #{formatVND(order.totalAmount || order.totalPrice)}

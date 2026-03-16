@@ -22,7 +22,7 @@ block main
                                     p.mb-0.text-muted Ngày đặt: #{order.createdAtFormatted}
                                 div.text-end
                                     span(class=`badge ${order.statusBadgeClass} mb-2`) #{order.statusLabel}
-                                    h6.mb-0 Tổng tiền: #{order.totalPrice}$
+                                    h6.mb-0 Tổng tiền: #{formatVND(order.totalAmount || order.totalPrice)}
                             .card-body
                                 .row.mb-3
                                     .col-md-4
@@ -75,9 +75,9 @@ block main
                                                             a(href=`/product/detail/${item.productInfor.slug}`) #{item.productInfor.title}
                                                         else
                                                             | #{item.productInfor.title}
-                                                    td #{item.newprice}$
+                                                    td #{formatVND(item.newprice)}
                                                     td #{item.quantity}
-                                                    td #{item.totalPrice}$
+                                                    td #{formatVND(item.totalPrice)}
                                             
         else
             .row

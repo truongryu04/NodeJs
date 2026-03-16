@@ -29,9 +29,9 @@ block main
                                     td 
                                         img(src=item.productInfo.thumbnail,alt=item.productInfo.title width="80px")
                                     td #{item.productInfo.title}
-                                    td #{item.productInfo.newprice}$
+                                    td #{formatVND(item.productInfo.newprice)}
                                     td #{item.quantity}
-                                    td #{item.totalprice}$
+                                    td #{formatVND(item.totalprice)}
                         else 
                             tr 
                                 td(
@@ -39,7 +39,7 @@ block main
                                     class="text-center"
                                 ) Giỏ hàng trống
                 if(cartDetail.products.length>0)
-                    h3(class="text-end mt-3") Tổng đơn hàng : #{cartDetail.totalPrice}$
+                    h3(class="text-end mt-3") Tổng đơn hàng : #{formatVND(cartDetail.totalPrice)}
         if(cartDetail.products.length>0)
             .row 
                 .col-12 

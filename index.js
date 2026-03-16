@@ -21,6 +21,7 @@ require("dotenv").config()
 const route = require("./routes/client/index")
 const routeAdmin = require("./routes/admin/index")
 const database = require("./config/database")
+const currencyHelper = require("./helpers/currency")
 const port = process.env.PORT || 3000
 const systemConfig = require("./config/system")
 app.set("views", `${__dirname}/views`)
@@ -48,6 +49,7 @@ global._io = io
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin
 app.locals.moment = moment
+app.locals.formatVND = currencyHelper.formatVND
 database.connect()
 
 app.use(express.static(`${__dirname}/public`))
