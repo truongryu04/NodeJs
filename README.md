@@ -142,3 +142,10 @@ Deploy nhanh:
 vercel
 ```
 
+## 10) Demo online
+
+- Link deploy: https://node-js-5goi.vercel.app/
+- Tài khoản admin test:
+  - Email: admin@gmail.com
+  - Mật khẩu: 12345678
+
